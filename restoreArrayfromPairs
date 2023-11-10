@@ -1,0 +1,36 @@
+class Solution {
+public:
+
+    void dfs( unordered_map<int,list<int>> &adj,unordered_map<int,bool>&visit,vector<int> &arr,int node){
+        visit[node]=true;
+        arr.push_back(node);
+        for(auto i:adj[node]){
+            if(!visit[i]){
+                dfs(adj,visit,arr,i);
+            }
+        }
+        return;
+    }
+
+    vector<int> restoreArray(vector<vector<int>>& adjacentPairs) {
+        int n=adjacentPairs.size()+1;
+        unordered_map<int,list<int>> adj;
+        for(auto i:adjacentPairs){
+            adj[i[0]].push_back(i[1]);
+            adj[i[1]].push_back(i[0]);
+        }
+        unordered_map<int,bool>visit;
+
+        //finding unique element
+        int start;
+        for(auto i: adj){
+            if(i.second.size()==1){
+                start=i.first;
+                break;
+            }
+        }
+        vector<int> arr;
+        dfs(adj,visit,arr,start);
+        return arr;
+    }
+};
