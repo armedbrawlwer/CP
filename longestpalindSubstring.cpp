@@ -10,8 +10,8 @@ public:
         std::string result = s;
         
         for (int i = 0; i < s.length(); i++) {
-            expandPalindrome(s, i, i, maxLen, lo);
-            expandPalindrome(s, i, i + 1, maxLen, lo);
+            expandPalindrome(s, i, i, maxLen, lo);  //odd len
+            expandPalindrome(s, i, i + 1, maxLen, lo);    //even len
         }
         
         return result.substr(lo, maxLen);
