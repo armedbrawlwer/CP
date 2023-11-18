@@ -1,0 +1,44 @@
+class Solution {
+public:
+
+    bool isPossible(vector<int> &nums, int k, int mid) {
+        long long int winsum = 0;
+        int n = nums.size();
+        for (int i = 0; i < mid; i++) {
+            winsum += nums[i];
+        }
+        long long int totsum = 1LL * (mid ) * nums[mid - 1];
+        if (totsum - winsum <= k) {
+            return true;
+        }
+        int j = 0;
+        for (int i = mid; i < n; i++) {
+            winsum -= nums[j];
+            winsum += nums[i];
+            totsum =totsum= 1LL* nums[i]*mid; // Fix: Add the current element to totsum
+            if (totsum - winsum <= k) {
+                return true;
+            }
+            j++;
+        }
+        return false;
+    }
+
+    int maxFrequency(vector<int>& nums, int k) {
+        sort(nums.begin(), nums.end());
+        int n = nums.size();
+        int l = 1, h = n ;
+        int ans = 0;
+
+        while (l <= h) {
+            int mid = (l + h) / 2;
+            if (isPossible(nums, k, mid)) {
+                ans = mid;
+                l = mid + 1;
+            } else {
+                h = mid - 1;
+            }
+        }
+        return ans;
+    }
+};
