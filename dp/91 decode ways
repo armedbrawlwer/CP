@@ -1,0 +1,65 @@
+class Solution {
+public:
+
+
+    int solverec(string s,int n,int i)
+    {
+        if(i==n)
+        {
+            return 1;
+        }
+        if(s[i]=='0')
+        return 0;
+
+        int single=solverec(s,n,i+1);
+        if(i+1<n && (s[i]=='1' || (s[i]=='2' && s[i+1]<='6') ))
+        {
+            single+=solverec(s,n,i+2);
+        }
+        return single;
+    }
+
+    int solvemem(string s,int n,int i,vector<int> &dp)
+    {
+        if(i==n)
+        {
+            return 1;
+        }
+        if(s[i]=='0')
+        {return 0;}
+
+        if(dp[i]!=-1)
+        {
+            return dp[i];
+        }
+
+        int single=solvemem(s,n,i+1,dp);
+        int two=0;
+        if(i+1<n && (s[i]=='1' || (s[i]=='2' && s[i+1]<='6') ))
+        {
+            two=solvemem(s,n,i+2,dp);
+        }
+        return dp[i]=single+two;
+    }
+
+    // int tabulation(string s)
+    // {
+    //     int n=s.size();
+    //     int i=0;
+    //     vector<int> dp(n+1,0);
+    //     dp[n]=1;
+    //     for(int i=n-1;i>=0;i--)
+    //     {
+    //         int one
+    //     }
+    //     return 0;
+    // }
+
+    int numDecodings(string s) {
+        int n=s.size();
+        int i=0;
+        vector<int> dp(n,-1);
+        return solvemem(s,n,i,dp);
+        // return solverec(s,n,i);
+    }
+};
