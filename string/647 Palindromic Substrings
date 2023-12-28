@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int countSubstrings(string s) {
+        int n=s.size();
+        if(n<2)
+        {
+            return n;
+        }
+        int ans=0;
+        for(int i=0;i<n;i++)
+        {
+            expandPal(s,i,i,ans);
+            expandPal(s,i,i+1,ans);
+        }
+        return ans;
+
+    }
+    void expandPal(string s,int st,int end,int &ans)
+    
+        {while(st>=0 && end<s.size() && s[st]==s[end] )
+        {
+            ans++;
+            st--;
+            end++;
+        }
+        return;}
+    
+};
