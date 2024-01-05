@@ -1,0 +1,32 @@
+class Solution {
+public:
+    bool canMeasureWater(int j1, int j2, int tar) {
+        int x = j1,y=j2,z=x+y;
+        queue<int> q;
+        q.push(0);
+        vector<bool> vis(z+1,0);
+        vis[0]=1;
+
+        int steps[]={x,-x,-y,y};
+
+        while(!q.empty())
+        {
+            int node = q.front();
+            q.pop();
+
+            if(node==tar) return 1;
+
+            for(int i=0;i<4;i++)
+            {
+                int newnode = node +steps[i];
+                if(newnode>=0 && newnode <=z )
+                {
+                    if(vis[newnode]== false)
+                    {q.push(newnode);
+                    vis[newnode]=1;}
+                }
+            }
+        }
+        return false;
+    }
+};
