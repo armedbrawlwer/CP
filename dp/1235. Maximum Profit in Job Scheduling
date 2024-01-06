@@ -1,0 +1,61 @@
+class Solution {
+public:
+    static bool compare(vector<int> a, vector<int> b) { return (a[0] < b[0]); }
+
+    int solverec(vector<vector<int>>& jobs, int n, int i,
+                 vector<int>& startTime) {
+        if (i >= n)
+            return 0;
+        int index =
+            lower_bound(startTime.begin(), startTime.end(), jobs[i][1]) -
+            startTime.begin();
+        int take = jobs[i][2] + solverec(jobs, n, index, startTime);
+        int notake = solverec(jobs, n, i + 1, startTime);
+        return max(take, notake);
+    }
+
+    int solvemem(vector<vector<int>>& jobs, int n, int i,
+                 vector<int>& startTime, vector<int>& dp) {
+        if (i >= n)
+            return 0;
+        if (dp[i] != -1)
+            return dp[i];
+        int index =
+            lower_bound(startTime.begin(), startTime.end(), jobs[i][1]) -
+            startTime.begin();
+        int take = jobs[i][2] + solvemem(jobs, n, index, startTime, dp);
+        int notake = solvemem(jobs, n, i + 1, startTime, dp);
+        return dp[i] = max(take, notake);
+    }
+
+    int tabulation(vector<vector<int>> jobs, int n, vector<int> startTime) {
+        vector<int> dp(n + 1, 0);
+        for (int i = n - 1; i >= 0; i--) {
+            int index =
+                lower_bound(startTime.begin(), startTime.end(), jobs[i][1]) -
+                startTime.begin();
+            int take = jobs[i][2] + dp[index];
+            int notake = dp[i+1];
+             dp[i] = max(take, notake);
+        }
+        return dp[0];
+    }
+
+    
+
+    int jobScheduling(vector<int>& startTime, vector<int>& endTime,
+                      vector<int>& profit) {
+        int n = profit.size();
+        vector<vector<int>> jobs;
+        for (int i = 0; i < n; i++) {
+            vector<int> temp = {startTime[i], endTime[i], profit[i]};
+            jobs.push_back(temp);
+        }
+        sort(jobs.begin(), jobs.end(), compare);
+        sort(startTime.begin(), startTime.end());
+        vector<int> dp(n + 1, -1);
+        // return solverec(jobs,n,0,startTime);
+        // return solvemem(jobs, n, 0, startTime, dp);
+        return space(jobs,n,startTime);
+    }
+};
