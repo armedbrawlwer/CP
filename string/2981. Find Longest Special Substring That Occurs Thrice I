@@ -1,0 +1,30 @@
+class Solution {
+public:
+    int maximumLength(string s) {
+        int n = s.size();
+        unordered_map<string, int> mp;
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j <= n; j++) {  // Fix here: change j<n to j<=n
+                string str = s.substr(i, j - i);  // Fix here: calculate the correct length
+                if (mp.find(str) != mp.end()) {
+                    mp[str] = mp[str] + 1;
+                } else {
+                    mp[str] = 1;
+                }
+            }
+        }
+        int len = 0;
+        for (auto i : mp) {
+            string str = i.first;
+            int cnt = i.second;
+            if (cnt >= 3) {
+                int templen = str.size();
+                set<char> st(str.begin(), str.end());
+                if (st.size() == 1) {
+                    len = max(len, templen);
+                }
+            }
+        }
+        return len == 0 ? -1 : len;
+    }
+};
