@@ -1,0 +1,70 @@
+class Solution {
+public:
+    int solverec(vector<int> &jobs, int d, int n, int ind) {
+        if(d==1)
+        {
+            int maxd=jobs[ind];
+            for(int i=ind;i<n;i++)
+            {
+                maxd=max(jobs[i],maxd);
+            }
+            return maxd;
+        }
+
+        int maxd=jobs[ind];
+        int ans=INT_MAX;
+
+        for(int i=ind;i<=n-d;i++)
+        {
+            maxd=max(jobs[i],maxd);
+            int result=maxd+solverec(jobs,d-1,n,i+1);
+            ans=min(ans,result);
+        }
+        return ans;
+
+    }
+
+
+    int solvemem(vector<int> &jobs, int d, int n, int ind,vector<vector<int>> &dp) {
+        if(d==1)
+        {
+            int maxd=jobs[ind];
+            for(int i=ind;i<n;i++)
+            {
+                maxd=max(jobs[i],maxd);
+            }
+            return maxd;
+        }
+
+        if(dp[ind][d]!=-1) return dp[ind][d];
+
+        int maxd=jobs[ind];
+        int ans=INT_MAX;
+
+        for(int i=ind;i<=n-d;i++)
+        {
+            maxd=max(jobs[i],maxd);
+            int result=maxd+solvemem(jobs,d-1,n,i+1,dp);
+            ans=min(ans,result);
+        }
+        return dp[ind][d]=ans;
+
+    }
+
+    int tabulation(vector<int> jobs,int d)
+    {
+        int n=jobs.size();
+        vector<vector<int>> dp(n,vector<int> (d+1,-1));
+        for(int )
+    }
+
+    int minDifficulty(vector<int>& jobs, int d) {
+        int n = jobs.size();
+        // dynamic programming
+        if (n < d) return -1;
+        int ind = 0, maxi = 0;
+        vector<vector<int>> dp(n,vector<int> (d+1,-1));
+        return solvemem(jobs,d,n,ind,dp);
+        // return solvemem(jobs, d, n, ind);
+    }
+};
