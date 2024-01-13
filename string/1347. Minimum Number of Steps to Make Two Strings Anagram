@@ -1,0 +1,24 @@
+auto init = []() 
+{
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+    return 'c';
+}();
+class Solution {
+public:
+    int minSteps(string s, string t) {
+        unordered_map<char,int> mp;
+        for(int i =0;i<s.size();i++)
+        {
+            mp[s[i]]++;
+            mp[t[i]]--;
+        }
+        int op = 0;
+        for(auto i:mp)
+        {
+            if(i.second<0) op+=abs(i.second);
+        }
+        return op;
+    }
+};
