@@ -1,0 +1,34 @@
+#define ll long long
+class Solution {
+public:
+    bool isvow(char a) {
+        return (a == 'a' || a == 'e' || a == 'i' || a == 'o' || a == 'u');
+    }
+    
+    long long beautifulSubstrings(string s, int k) {
+        int n = s.size();
+        int vow = 0, cons =0;
+        unordered_map<ll,unordered_map<ll,ll>> mp;
+        mp[0][0] = 1;
+        int res = 0;
+        for(int i= 0;i<n;i++)
+        {
+            if(isvow(s[i])) vow++;
+            else cons++;
+
+            ll diff = vow - cons;
+            for(auto &[pastVow,count]:mp[diff])
+            {
+                ll currsubvowel = vow%k - pastVow;
+                if((currsubvowel *currsubvowel)%k==0 )
+                {
+                    res += count;
+                }
+            }
+
+            mp[diff][vow%k]++;
+
+        }
+        return res;
+    }
+};
