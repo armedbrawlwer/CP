@@ -1,0 +1,72 @@
+//{ Driver Code Starts
+#include<bits/stdc++.h>
+using namespace std;
+
+// } Driver Code Ends
+class Solution{
+	public:
+	
+	int solverec(string &str,int n,int s,int i)
+	{
+	    if(i==n) return 1;
+	    
+	    
+	    int ans = 0;
+	    int curr = 0;
+	    for(int ind=i;ind<n;ind++)
+	    {
+	        curr+=str[ind]-'0';
+	        
+	        if(curr>=s){
+	            ans+=solverec(str,n,curr,ind+1);
+	        }
+	    }
+	    return ans;
+	}
+	
+	
+	int solvemem(string &str,int n,int s,int i,vector<vector<int>> &dp)
+	{
+	    if(i==n) return 1;
+	       
+	    if(dp[i][s]!=-1) return dp[i][s];
+	    
+	    int ans = 0;
+	    int curr = 0;
+	    for(int ind=i;ind<n;ind++)
+	    {
+	        curr+=str[ind]-'0';
+	        
+	        if(curr>=s){
+	            ans+=solvemem(str,n,curr,ind+1,dp);
+	        }
+	    }
+	    return dp[i][s]=ans;
+	}
+	
+	int TotalCount(string str){
+	    // Code here
+	    int n = str.size();
+	    int maxs_sum =0;
+	    
+	    vector<vector<int>> dp(n,vector<int>(9*n+1,-1));
+	    int ans = solvemem(str,n,0,0,dp);
+	    return ans;
+	}
+
+};
+
+//{ Driver Code Starts.
+int main(){
+	int tc;
+	cin >> tc;
+	while(tc--){
+		string str;
+		cin >> str;
+		Solution ob;
+		int ans = ob.TotalCount(str);
+		cout << ans <<"\n";
+	}
+	return 0;
+}
+// } Driver Code Ends
