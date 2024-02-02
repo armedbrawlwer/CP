@@ -1,0 +1,38 @@
+class Solution {
+public:
+
+    int solverec(vector<int> &arr,int start,int end)
+    {
+        if(start>end) return 0;
+        int maxi = INT_MIN;
+        for(int i =start;i<=end;i++)
+        {
+            int coins = arr[start-1]*arr[i]*arr[end+1] + solverec(arr,start,i-1) + solverec(arr,i+1,end);
+            maxi = max(coins,maxi);
+        }
+        return maxi;
+    }
+
+    int solvemem(vector<int> &arr,int start,int end,int dp[301][301])
+    {
+        if(start>end) return 0;
+        if(dp[start][end]!=-1) return dp[start][end];
+        int maxi = INT_MIN;
+        for(int i =start;i<=end;i++)
+        {
+            int coins = arr[start-1]*arr[i]*arr[end+1] + solvemem(arr,start,i-1,dp) + solvemem(arr,i+1,end,dp);
+            maxi = max(coins,maxi);
+        }
+        return dp[start][end]=maxi;
+    }
+
+    int maxCoins(vector<int>& nums) {
+        
+        int n = nums.size();
+        nums.insert(nums.begin(),1);
+        nums.push_back(1);
+        int dp[301][301];
+        memset(dp,-1,sizeof(dp));
+        return solvemem(nums,1,n,dp);
+    }
+};
