@@ -1,0 +1,30 @@
+
+
+using namespace std;
+
+class Solution {
+public:
+    vector<int> fullBloomFlowers(vector<vector<int>>& flowers, vector<int>& people) {
+        vector<int> startTimes;
+        vector<int> endTimes;
+        vector<int> ans;
+        int fnum = flowers.size();
+        int pnum = people.size();
+        for (int i = 0; i < fnum; i++) {
+            startTimes.push_back(flowers[i][0]);
+            endTimes.push_back(flowers[i][1]);
+        }
+        sort(startTimes.begin(), startTimes.end());
+        sort(endTimes.begin(), endTimes.end());
+        
+
+        for (int i = 0; i < pnum; i++) {
+            int lb = lower_bound(endTimes.begin(),endTimes.end(),people[i]) - endTimes.begin();
+            int ub = upper_bound(startTimes.begin(),startTimes.end(),people[i]) - startTimes.begin();
+            ans.push_back(abs(ub-lb));
+
+
+        }
+        return ans;
+    }
+};
