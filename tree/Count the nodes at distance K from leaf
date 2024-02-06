@@ -1,0 +1,35 @@
+class Solution
+{
+    public:
+    //Function to return count of nodes at a given distance from leaf nodes.
+    
+    void solverec(Node *root,int k,set<Node*> &nodes,vector<Node*> &path)
+    {
+        
+        if(root== NULL) return;
+        path.push_back(root);
+        if(root->left==nullptr && root->right==nullptr)
+        {
+            if(path.size()-1-k>=0)
+            {
+                nodes.insert(path[path.size()-1-k]);
+            }
+        }
+        
+         solverec(root->left,k,nodes,path);
+         solverec(root->right,k,nodes,path);
+        
+        path.pop_back();
+        
+        return;
+    }
+    
+    int printKDistantfromLeaf(Node* root, int k)
+    {
+    	//Add your code here. 
+    	set<Node*> nodes;
+    	vector<Node*> path;
+    	solverec(root,k,nodes,path);
+    	return nodes.size();
+    }
+};
