@@ -1,0 +1,29 @@
+class Solution {
+public:
+    int minimumDeletions(vector<int>& nums) {
+        int n = nums.size();
+        int maxi = INT_MIN, mini = INT_MAX;
+        int maxind, minind;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] > maxi) {
+                maxi = nums[i];
+                maxind = i;
+            }
+            if (nums[i] < mini) {
+                mini = nums[i];
+                minind = i;
+            }
+        }
+        int smallerInd=min(minind,maxind);
+        int biggerInd=max(minind,maxind);
+
+        //remove from front
+        int way1= biggerInd+1;
+        //remove from back
+        int way2=n-smallerInd;
+        //remove simultaneously
+        int way3=smallerInd+1 + n-biggerInd;
+
+        return min(way3,min(way1,way2));
+    }
+};
