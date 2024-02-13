@@ -1,0 +1,41 @@
+class Solution {
+public:
+    void solvelps(string s, int lps[], int n) {
+        if (n == 0) // Ensure n is non-zero
+            return;
+
+        lps[0] = 0;
+        int len = 0;
+        int i = 1;
+
+        while (i < n) {
+            if (s[i] == s[len]) {
+                len++;
+                lps[i] = len;
+                i++;
+            } else {
+                if (len != 0) {
+                    len = lps[len - 1];
+                } else {
+                    lps[i] = 0;
+                    i++;
+                }
+            }
+        }
+    }
+
+    bool rotateString(string s, string goal) {
+        if (s.size() != goal.size())
+            return false;
+        string fin = goal + s + s;
+        int totsize = fin.size();
+        int lps[totsize];
+        solvelps(fin, lps, totsize);
+        for (int i = 0; i < totsize; i++) {
+            if (lps[i] == goal.size()) {
+                return true;
+            }
+        }
+        return false;
+    }
+};
