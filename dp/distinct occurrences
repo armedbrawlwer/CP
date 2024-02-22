@@ -1,0 +1,60 @@
+//{ Driver Code Starts
+#include <bits/stdc++.h>
+using namespace std;
+ 
+
+// } Driver Code Ends
+/*You are required to complete this method*/
+
+class Solution
+{
+    public:
+    int mod= 1000000007;
+    int solverec(string s,string t,int i,int j,int dp[1001][1001])
+    {
+        if(j<0) return 1;
+        if(i<0) return 0;
+        if(dp[i][j]!=-1) return dp[i][j];
+        
+        int ways=0;
+        
+        
+        if(s[i]==t[j]) ways = ( ways + solverec(s,t,i-1,j-1,dp) + solverec(s,t,i-1,j,dp))%mod;
+        else ways = (ways+ solverec(s,t,i-1,j,dp))%mod;
+        
+        return dp[i][j]=ways;
+    }
+    int subsequenceCount(string s, string t)
+    {
+      //Your code here
+      int i = s.size()-1,j = t.size()-1;
+      int dp[1001][1001];
+      memset(dp,-1,sizeof(dp));
+      return solverec(s,t,i,j,dp);
+    }
+};
+ 
+
+
+//{ Driver Code Starts. 
+
+//  Driver code to check above method
+int main()
+{
+	int t;
+	cin>>t;
+	while(t--)
+	{
+		string s;
+		string tt;
+		cin>>s;
+		cin>>tt;
+		
+		Solution ob;
+		cout<<ob.subsequenceCount(s,tt)<<endl;
+		
+		
+	}
+  
+}
+// } Driver Code Ends
