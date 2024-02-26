@@ -1,0 +1,36 @@
+class Solution {
+public:
+    // the task which is greater in  number perform it first
+
+    int leastInterval(vector<char>& tasks, int n) {
+        // int n = tasks.size();
+        vector<int> ctr(26, 0);
+        for (auto i : tasks) {
+            ctr[i - 'A']++;
+        }
+        priority_queue<int> pq;
+        for (auto i : ctr) {
+           if(i>0) pq.push(i);
+        }
+        queue<pair<int, int>> q; // cnt and idle time
+
+        int timer = 0;
+        while (!pq.empty()||!q.empty()) {
+            timer += 1;
+            if (!pq.empty()) {
+                int cnt = pq.top();
+                pq.pop();
+                cnt =cnt-1;
+                if (cnt!=0) {
+                    q.push({cnt, timer + n});
+                }
+            }
+            if (!q.empty() && q.front().second == timer) {
+                pair<int,int> node = q.front();
+                q.pop();
+                pq.push(node.first);
+            }
+        }
+        return timer;
+    }
+};
