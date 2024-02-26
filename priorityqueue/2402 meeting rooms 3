@@ -1,0 +1,55 @@
+class Solution {
+public:
+    int mostBooked(int n, vector<vector<int>>& meetings) {
+        int len = meetings.size();
+        vector<int> roomscnt(n,0);
+        vector<int> lastavail(n,0);//lastavail[i]=room i will be last avail
+        for(vector<int> &meet:meetings)
+        {
+            int start = meet[0];
+            int end=meet[1];
+            int time = end-start;
+            bool found = false;
+            //sabse pehle kaunsa hoga
+            int earlyend=INT_MAX;
+            int earlyroom = 0;
+
+            for(int room=0;room<n;room++)
+            {
+                if(lastavail[room]<start)
+                {
+                    lastavail[room]=end;
+                    roomscnt[room]++;
+                    found=1;
+                    break;
+                }
+
+                if(lastavail[room]<earlyend)
+                {
+                    earlyend = lastavail[room];
+                    earlyroom = room;
+                }
+            }
+
+            if(!found)
+            {
+               lastavail[earlyroom] += time;
+               roomscnt[earlyroom]++; 
+            }
+
+        }
+        int ans=-1;
+        int maxuse =0;
+        for(int room=0;room<n;room++)
+        {
+            if(roomscnt[room]>ans)
+            {
+                ans=roomscnt[room];
+                maxuse=room;
+            }
+        }
+        return maxuse;
+
+
+    }
+};
