@@ -1,0 +1,30 @@
+class Solution {
+public:
+    long long largestSquareArea(vector<vector<int>>& bottomLeft,
+                                vector<vector<int>>& topRight) {
+        int n = topRight.size();
+        long long ans =0;
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(i==j) continue;
+
+                long long minx = max(bottomLeft[i][0],bottomLeft[j][0]);
+                long long miny = max(bottomLeft[i][1],bottomLeft[j][1]);
+                long long maxx = min(topRight[i][0],topRight[j][0]);
+                long long maxy = min(topRight[i][1],topRight[j][1]);
+
+                if(minx>maxx || miny>maxy) continue;
+
+                long long len = maxx-minx;
+                long long bre = maxy-miny;
+                long long side = min(len,bre);
+                long long area = side*side;
+
+                ans = max(ans,area);
+            }
+        }
+        return ans;
+    }
+};
