@@ -1,0 +1,70 @@
+//{ Driver Code Starts
+#include <bits/stdc++.h>
+using namespace std;
+
+
+// } Driver Code Ends
+//User function template for C++
+class Solution{
+    
+public:	
+
+
+    void solve(vector<string> &ans,string s,int ind,int n,int z,int o)
+    {
+        if(ind == n-1) {
+            if(o>=z)
+            {
+                ans.push_back(s);
+            }
+            return;
+        }
+        
+        if(o>=z)
+        {
+            solve(ans,s+'0',ind+1,n,z+1,o);
+            solve(ans,s+'1',ind+1,n,z,o+1);
+        } 
+    }
+    
+	vector<string> NBitBinary(int n)
+	{
+	    // Your code goes here
+	    vector<string> ans;
+	    string s="1";
+	    int ind=0;
+	    solve(ans,s,ind,n,0,1);
+	    sort(ans.begin(),ans.end());
+	    reverse(ans.begin(),ans.end());
+	    return ans;
+	}
+};
+
+//{ Driver Code Starts.
+
+int main() 
+{
+   	
+
+   	ios_base::sync_with_stdio(0);
+    cin.tie(NULL);
+    cout.tie(NULL);
+   
+   	int t;
+   	cin >> t;
+   	while(t--)
+   	{
+   		int n;
+   		cin >> n;
+        Solution ob;
+   		vector<string> ans = ob.NBitBinary(n);
+
+   		for(auto i:ans)
+   			cout << i << " ";
+
+   		cout << "\n";
+   	}
+
+    return 0;
+}
+// } Driver Code Ends
