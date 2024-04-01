@@ -1,0 +1,22 @@
+class Solution {
+public:
+    long long countSubarrays(vector<int>& nums, int minK, int maxK) {
+        int n = nums.size();
+        int mindex = -1;
+        int maxdex = -1;
+        int culindex = -1;
+        long long ans = 0;
+
+        for(int i=0;i<n;i++)
+        {
+            mindex = nums[i]==minK?i:mindex;
+            maxdex = nums[i]==maxK?i:maxdex;
+            culindex = (nums[i]>maxK || nums[i]<minK)?i:culindex;
+
+            int smindex = min(mindex,maxdex);
+
+            ans+=(smindex-culindex)>0?(smindex-culindex):0;
+        }
+        return ans;
+    }
+};
