@@ -1,0 +1,38 @@
+class Solution {
+public:
+    bool chk(vector<int>& candies, long long k,int mid){
+        long long count = 0;
+        int n = candies.size();
+        for(int i=0; i<n; i++){
+            count += candies[i]/mid;
+        }
+
+        if(count < k){
+            return false;
+        }
+
+        return true;
+    }
+
+    int maximumCandies(vector<int>& candies, long long k) {
+        int n = candies.size();
+        // maximum candy each child can take is min of candies pile
+        // break each pile for each kid and if kid stil remains return false
+        int maxi = INT_MIN;
+        for(auto i:candies) maxi= max(maxi,i);
+        long long high = maxi;
+        long long low = 1;
+        long long ans = 0;
+        long long mid = (low + high) / 2;
+        while (low <= high) {
+            if (chk(candies, k, mid)) {
+                ans = mid;
+                low = mid + 1;
+            } else {
+                high = mid-1;
+            }
+            mid = (low + high) / 2;
+        }
+        return (int)ans;
+    }
+};
