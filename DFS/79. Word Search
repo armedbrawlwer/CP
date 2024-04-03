@@ -1,0 +1,57 @@
+class Solution {
+public:
+
+    bool solve(vector<vector<char>>& board, string word,int r,int c,vector<vector<int>>& vis,string tp)
+    {
+        if(word == tp) return true;
+        vis[r][c]=1;
+        int dr[]={-1,1,0,0};
+        int dc[]={0,0,-1,1};
+        int m = board.size();
+        int n = board[0].size();
+
+        bool ans = false;
+        for(int i=0;i<4;i++)
+        {
+            int nr = r+dr[i];
+            int nc = c+dc[i];
+            if(nr>=0 && nr<m && nc>=0 &&nc<n && vis[nr][nc]!=1)
+            {
+                if(word[tp.size()]==board[nr][nc])
+                {
+                    ans= solve(board,word,nr,nc,vis,tp+board[nr][nc]);
+                    //remember to return ans as soon as u find it
+                    if(ans) return true;
+                }
+            }
+        }
+        vis[r][c]=0;
+        return ans;
+    }
+
+    bool exist(vector<vector<char>>& board, string word) {
+        char st = word[0];
+        int m = board.size();
+        int n = board[0].size();
+
+        queue<pair<int,int>> q;
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(board[i][j] == st) q.push({i,j});
+            }
+        }
+        vector<vector<int>> vis(m,vector<int> (n,0));
+        while(!q.empty())
+        {
+            auto i = q.front();
+            q.pop();
+            string tp = "";
+            tp.push_back(st);
+            bool ans = solve(board,word,i.first,i.second,vis,tp);
+            if(ans==1) return ans;
+        }
+        return false;
+    }
+};
