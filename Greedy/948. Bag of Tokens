@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int bagOfTokensScore(vector<int>& arr, int power) {
+        int n = arr.size();
+        int score = 0;
+        sort(arr.begin(),arr.end());
+        int i = 0;
+        int j = n-1;
+        int maxScore = 0;
+        while(i<=j)
+        {
+            if(power>=arr[i])
+            {
+                power-=arr[i];
+                score+=1;
+                i+=1;
+                maxScore = max(score,maxScore);
+            }
+            else if(score>0)
+            {
+                power+=arr[j];
+                score-=1;
+                j-=1;
+            }
+            else{
+                return maxScore;
+            }
+        }
+        return maxScore;
+    }
+};
