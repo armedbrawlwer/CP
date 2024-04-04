@@ -1,0 +1,21 @@
+class Solution
+{
+    public:
+    //Function to find sum of all possible substrings of the given string.
+    long long sumSubstrings(string s){
+        
+        // your code here
+        int n = s.size();
+        int mod = 1e9+7;
+        long long ans = 0,pre=0,curr=0;
+        for(int i=0;i<n;i++)
+        {
+            curr = (s[i]-'0')*(i+1)+pre*10;
+            curr%=mod;
+            ans+=curr;
+            ans%=mod;
+            pre=curr;
+        }
+        return ans;
+    }
+};
