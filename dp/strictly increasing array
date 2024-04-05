@@ -1,0 +1,36 @@
+class Solution {
+  public:
+
+    int lis(vector<int> &nums)
+    {
+        int n = nums.size();
+        vector<int> dp(n,1);
+        vector<int> hash(n);
+        int maxi=1;
+        
+        
+        for(int i =0;i<n;i++)
+        {
+            for(int pre = 0;pre<i;pre++)
+            {
+                if(nums[i]>nums[pre] && 1 + dp[pre]> dp[i] && nums[i]-nums[pre]>=i-pre)
+                {
+                    dp[i] = 1+dp[pre];
+                }
+            }
+            if(dp[i]>maxi)
+            {
+                maxi = dp[i];
+            }
+        }
+        return maxi;
+    }
+
+    int min_operations(vector<int>& nums) {
+        // Code here
+        int l = lis(nums);
+        int n= nums.size();
+        return n - l;
+    }
+};
+
