@@ -1,0 +1,55 @@
+//{ Driver Code Starts
+#include <bits/stdc++.h>
+using namespace std;
+
+
+// } Driver Code Ends
+class Solution{
+    public:
+    //Function to find if there exists a triplet in the 
+    //array A[] which sums up to X.
+    bool find3Numbers(int arr[], int n, int x) {
+    sort(arr, arr + n); // Sort the array in non-decreasing order
+
+    for (int i = 0; i < n - 2; i++) {
+        int left = i + 1; // Pointer to the element after arr[i]
+        int right = n - 1; // Pointer to the last element
+
+        while (left < right) {
+            int sum = arr[i] + arr[left] + arr[right];
+
+            if (sum == x) {
+                return true; // Found the triplet
+            } else if (sum < x) {
+                left++; // Move left pointer to increase the sum
+            } else {
+                right--; // Move right pointer to decrease the sum
+            }
+        }
+    }
+
+    return false; // No triplet found
+}
+
+
+};
+
+//{ Driver Code Starts.
+
+int main()
+{
+	int T;
+	cin>>T;
+	while(T--)
+	{
+		int n,X;
+		cin>>n>>X;
+		int i,A[n];
+		for(i=0;i<n;i++)
+			cin>>A[i];
+		Solution ob;
+        cout <<  ob.find3Numbers(A, n, X) << endl;
+    }
+}
+
+// } Driver Code Ends
