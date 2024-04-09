@@ -1,0 +1,33 @@
+
+class Solution{
+
+	public:
+	
+	int  solverec(vector<vector<int>> &points,int m,int n,int r,int c,int dp[1001][1001])
+	{
+	    if(r==m-1 && c == n-1)
+	    {
+	        return 1-points[r][c];
+	    }
+	    
+	    if(dp[r][c]!=-1) return dp[r][c];
+	    
+	    int a = INT_MAX,b= INT_MAX;
+	    
+	   if(r+1<m) a = solverec(points,m,n,r+1,c,dp);
+	   if(c+1<n) b= solverec(points,m,n,r,c+1,dp);
+	    
+	    return dp[r][c]=max(1,min(a,b)-points[r][c]);
+  
+	}
+ int minPoints(int m, int n, vector<vector<int>> points) 
+	{ 
+	    // Your code goes here4
+	    int sum = 0;
+	    int ans=0;
+	    int dp[1001][1001];
+	    memset(dp,-1,sizeof(dp));
+	    
+	    return solverec(points,m,n,0,0,dp);
+	} 
+};
