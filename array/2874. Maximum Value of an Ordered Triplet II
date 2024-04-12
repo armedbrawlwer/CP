@@ -1,22 +1,28 @@
 class Solution {
 public:
-    int trap(vector<int>& height) {
-        int n = height.size();
-        vector<int> lh(n, 0);
-        vector<int> rh(n, 0);
-        lh[0] = height[0];
-        rh[n-1] = height[n-1];
+    long long maximumTripletValue(vector<int>& nums) {
+        //need to compute two prefix and suffix arrays
+        int n = nums.size();
 
-        for (int i = 1; i < n; i++) {
-            lh[i] = max(lh[i - 1], height[i]);
+        vector<long long> pre(n,0);
+        vector<long long> suff(n,0);
+        long long maxl = INT_MIN,maxr = INT_MIN;
+
+        for(int i=0;i<n;i++)
+        {
+            maxl = max(maxl,(long long)nums[i]);
+            pre[i] = max(pre[i],maxl);
         }
-        for (int i = n - 2; i >= 0; i--) {
-            rh[i] = max(rh[i + 1], height[i]);
+        for(int i=n-1;i>=0;i--)
+        {
+            maxr = max(maxr,(long long)nums[i]);
+            suff[i] = max(suff[i],maxr);
         }
-        int ans=0;
+
+        long long ans = 0;
         for(int i=1;i<n-1;i++)
         {
-            ans +=abs(min(lh[i],rh[i])-height[i]);
+            ans = max(ans,((pre[i-1] - nums[i])*suff[i+1]));
         }
         return ans;
     }
