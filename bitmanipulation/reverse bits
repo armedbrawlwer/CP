@@ -1,0 +1,16 @@
+class Solution {
+public:
+    long long reversedBits(long long x) {
+        long long ans = 0;
+        int ctr = 0;
+        while (ctr < 32 && x != 0) {
+            int bit = x & 1;
+            x = x >> 1;
+            ans = ans << 1;
+            ans = ans | bit;
+            ctr++;
+        }
+        ans = ans << (32 - ctr); // shift left to pad with zeros if less than 32 bits
+        return ans;
+    }
+};
