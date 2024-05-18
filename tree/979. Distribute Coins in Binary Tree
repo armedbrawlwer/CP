@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int solverec(TreeNode* root, int& moves) {
+        if (root == nullptr)
+            return 0;
+        // int moves = 0;
+
+        int left = solverec(root->left, moves);
+        int right = solverec(root->right, moves);
+
+        moves += abs(left) + abs(right);
+        return left + right + root->val - 1;
+    }
+
+    int distributeCoins(TreeNode* root) {
+        int moves = 0;
+        solverec(root, moves);
+        return moves;
+    }
+};
