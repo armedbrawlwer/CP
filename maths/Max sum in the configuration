@@ -1,0 +1,24 @@
+class Solution {
+  public:
+    long long max_sum(int a[], int n) {
+    // Compute initial value of S0
+    long long initial = 0;
+    for (int i = 0; i < n; i++) {
+        initial += static_cast<long long>(a[i]) * i;
+    }
+    
+    // Compute sum of all elements in the array
+    long long sum = accumulate(a, a + n, 0LL);
+    
+    // Initialize maximum sum as the initial sum
+    long long maxi = initial;
+    
+    // Compute the sum for all rotations
+    long long current = initial;
+    for (int i = 1; i < n; i++) {
+        current = current + sum - static_cast<long long>(n) * a[n - i];
+        maxi = max(maxi, current);
+    }
+    
+    return maxi;
+}
