@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int minimumDeletions(string word, int k) {
+        vector<int> v(26, 0);
+        int ctr = 0;
+        for (auto i : word) {
+            v[i - 'a']++;
+        }
+        int res = word.size();
+
+        for (int i = 0; i < 26; i++) {
+            int del = 0;
+            for (int j = 0; j < 26; j++) {
+                if (i == j)
+                    continue;
+
+                if (v[j] < v[i])
+                    del += v[j];
+                else if (abs(v[i] - v[j]) > k) {
+                    del+=abs(v[i] - v[j]) - k;
+                }
+            }
+            res = min(del,res);
+        }
+        return res;
+    }
+};
