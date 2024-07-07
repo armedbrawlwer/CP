@@ -1,0 +1,12 @@
+class Solution {
+public:
+    long long maximumPoints(vector<int>& arr, int k) {
+        int mini = *min_element(arr.begin(),arr.end());
+        if(mini>k)return 0;
+        long long ans=0;
+        for(auto i:arr) ans+=i;
+        ans+=k;
+        ans-=mini;
+        return ans/mini;
+    }
+};
