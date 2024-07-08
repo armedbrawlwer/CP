@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int dfs( unordered_map<int, list<int>>& adj, vector<int>& vis,
+            int from) {
+        int change = 0;
+        vis[from] = 1;
+        for (auto to : adj[from]) {
+            if (vis[abs(to)] == 0) {
+                change += dfs( adj, vis, abs(to)) + (to > 0);
+            }
+        }
+        return change;
+    }
+
+    int minReorder(int n, vector<vector<int>>& edges) {
+        unordered_map<int, list<int>> mp;
+        vector<int> vis(n, 0);
+        for (auto i : edges) {
+            mp[i[0]].push_back(i[1]);
+            mp[i[1]].push_back(-i[0]);
+        }
+        int ctr = 0;
+        return dfs( mp, vis, 0);
+    }
+};
