@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int solverec(int i, int j, vector<int>& freq, int k, int dp[26][26]) {
+        if (i==j || freq[j] - freq[i] <= k) {
+            return 0;
+        }
+        if (dp[i][j] != -1)
+            return dp[i][j];
+
+        return dp[i][j] =
+                   min(freq[i] + solverec(i + 1, j, freq, k, dp),
+                       freq[j] - freq[i] - k + solverec(i, j - 1, freq, k, dp));
+    }
+
+    int minimumDeletions(string word, int k) {
+        vector<int> freq(26, 0);
+        for (auto i : word) {
+            freq[i - 'a']++;
+        }
+        int dp[26][26];
+        memset(dp, -1, sizeof(dp));
+        sort(freq.begin(),freq.end());
+        return solverec(0, 25, freq, k, dp);
+    }
+};
