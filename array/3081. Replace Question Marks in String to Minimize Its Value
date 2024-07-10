@@ -1,0 +1,46 @@
+class Solution {
+public:
+    string minimizeStringValue(string s) {
+        int n = s.size();
+        unordered_map<char,int> mp;
+        multiset<pair<int,char>> ms;
+        for(auto i:s){
+            mp[i]++;
+        }
+        for(char c='a';c<='z';c++){
+            ms.insert({mp[c],c});
+        }
+        string ans;
+        for(int i=0;i<n;i++){
+            char ch = s[i];
+            if(ch=='?'){
+                pair<int,char> p = *ms.begin();
+                ms.erase(p);
+                mp[p.second]++;
+                ans+=p.second;
+                ms.insert({mp[p.second],p.second});
+            }
+            else{
+                ans+=ch;
+            }
+        }
+
+        string str = "",temp="";
+        for(int i=0;i<n;i++){
+            if(s[i]=='?'){
+                temp+=ans[i];
+            }
+        }
+        sort(temp.rbegin(),temp.rend());
+        for(int i=0;i<n;i++){
+            if(s[i]=='?'){
+                str+=temp.back();
+                temp.pop_back();
+            } else{
+                str+=ans[i];
+            }
+        }
+
+        return str;
+    }
+};
