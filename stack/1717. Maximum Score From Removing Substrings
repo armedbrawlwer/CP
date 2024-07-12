@@ -1,0 +1,36 @@
+class Solution {
+public:
+
+    int solve(string &s,string s1,int x){
+        int ctr=0,n = s.size();
+        stack<char> st;
+        for(int i=0;i<n;i++){
+            if(st.size()==0){
+                st.push(s[i]);
+            } else {
+                if(s[i]==s1[1] && st.top()==s1[0]){
+                    st.pop();
+                    ctr+=x;
+                } else{
+                    st.push(s[i]);
+                }
+            }
+        }
+        string ele;
+        while(!st.empty()){
+            ele+=st.top();
+            st.pop();
+        }
+        reverse(ele.begin(),ele.end());
+        s=ele;
+        return ctr;
+    }
+
+    int maximumGain(string s, int x, int y) {
+        string s1="ab",s2="ba";
+        if(x<y) swap(s1,s2),swap(x,y);
+
+        return solve(s,s1,x) + solve(s,s2,y);
+
+    }
+};
