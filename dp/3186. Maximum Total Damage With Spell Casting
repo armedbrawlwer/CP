@@ -1,0 +1,22 @@
+#define ll long long int
+class Solution {
+public:
+    long long maximumTotalDamage(vector<int>& power) {
+        map<ll,ll> freq;
+        for(auto el:power){
+            freq[el]++;
+        }
+        unordered_map<ll,ll>dp;
+        ll n = power.size(),backel=0,prevel,ans=0;
+        for(auto [el,fr]:freq){
+            auto backIt = freq.lower_bound(el-2);
+            if(backIt!=freq.begin()){
+                backel=(*(--backIt)).first;
+            }
+            dp[el] = max(dp[prevel],fr*el + dp[backel]);
+            ans =max(ans,dp[el]);
+            prevel = el;
+        }
+        return ans;
+    }
+};
