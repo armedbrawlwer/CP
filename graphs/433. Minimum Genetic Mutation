@@ -1,0 +1,39 @@
+class Solution {
+public:
+    bool chk(string s1,string s2)
+    {
+        int cnt=0;
+        for(int i =0; i<8;i++)
+        {
+            if(s1[i]!=s2[i])
+            {
+                cnt++;
+            }
+        }
+        return cnt==1?true:false;
+    }
+    int minMutation(string startGene, string endGene, vector<string>& bank) {
+        queue<pair<string,int>> q;  //string and no.of permutautions
+        q.push({startGene,0});
+        set<string> st;
+        st.insert(startGene);
+        int ans=0;
+        while(!q.empty())
+        {
+            pair<string,int> node = q.front();
+            q.pop();
+
+            if(node.first == endGene) return node.second;
+
+            for(int i=0;i<bank.size();i++)
+            {
+                if(chk(node.first,bank[i]) && !st.count(bank[i]))
+                {
+                    q.push({bank[i],node.second+1});
+                    st.insert(bank[i]);
+                }
+            }
+        }
+        return -1;
+    }
+};
