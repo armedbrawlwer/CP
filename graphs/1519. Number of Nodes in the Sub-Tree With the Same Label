@@ -1,0 +1,30 @@
+class Solution {
+public:
+
+    void dfs(int node,unordered_map<int,list<int>> &mp,string &labels,vector<int> &ctr,vector<int> &ans,
+    int parent){
+        char curr = labels[node];
+        int ctr_beore_visitChild = ctr[curr-'a'];
+        ctr[curr-'a']+=1;
+        for(auto j:mp[node]){
+            if(j==parent)continue;
+            dfs(j,mp,labels,ctr,ans,node);
+        }
+        int ctr_after_visitChild = ctr[curr-'a'];
+
+        ans[node] = ctr_after_visitChild-ctr_beore_visitChild;
+    }
+
+
+    vector<int> countSubTrees(int n, vector<vector<int>>& arr, string labels) {
+         unordered_map<int,list<int>> mp;
+        for(auto i:arr){
+            int u=i[0],v=i[1];
+            mp[u].push_back(v);
+            mp[v].push_back(u);
+        }
+        vector<int> ans(n,0),ctr(26,0);
+        dfs(0,mp,labels,ctr,ans,-1);
+        return ans;
+    }
+};
