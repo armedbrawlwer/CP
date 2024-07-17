@@ -1,0 +1,37 @@
+class Solution {
+public:
+    bool solverec(string s, int n, int ind, int oc, int dp[101][101]) {
+        if (ind == n)
+            return oc == 0;
+        if (oc < 0)
+            return false;
+
+        if (dp[ind][oc] != -1)
+            return dp[ind][oc];
+        bool o1 = false, o2 = false;
+        bool w1 = false, w2 = false, w3 = false;
+
+        char curr = s[ind];
+        if (curr == '(')
+            o1 = solverec(s, n, ind + 1, oc + 1, dp);
+        else if (curr == ')')
+            o2 = solverec(s, n, ind + 1, oc - 1, dp);
+        else {
+            w1 = solverec(s, n, ind + 1, oc + 1, dp);
+
+            w2 = solverec(s, n, ind + 1, oc - 1, dp);
+            w3 = solverec(s, n, ind + 1, oc, dp);
+        }
+
+        return dp[ind][oc] = ((w1 || w2) || w3) || (o1 || o2);
+    }
+
+    bool checkValidString(string s) {
+        // basic intution dp se hai because for every star we have 3 options
+        int n = s.size();
+        int ind = 0;
+        int dp[101][101];
+        memset(dp, -1, sizeof(dp));
+        return solverec(s, n, ind, 0, dp);
+    }
+};
