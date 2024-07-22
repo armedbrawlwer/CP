@@ -1,0 +1,22 @@
+class Solution {
+public:
+    vector<int> answerQueries(vector<int>& nums, vector<int>& queries) {
+        vector<int> cs;
+        sort(nums.begin(),nums.end());
+        int s=0;
+        for(auto i:nums){
+            s+=i;
+            cs.push_back(s);
+        }
+        vector<int> ans;
+        for(auto i:queries){
+            auto ind = upper_bound(cs.begin(),cs.end(),i)-cs.begin();
+            if(ind==cs.size()){
+                ans.push_back(ind);
+            }else{
+                ans.push_back(ind);
+            }
+        }
+        return ans;
+    }
+};
