@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int findMinArrowShots(vector<vector<int>>& points) {
+        int ans = 0;
+        int n = points.size();
+        sort(points.begin(), points.end());
+        vector<int> pre = points[0];
+        for (int i = 1; i < n; i++) {
+            auto curr = points[i];
+            int currst = curr[0], currend = curr[1];
+            int prest = pre[0], prend = pre[1];
+            if(currst>prend){
+                ans+=1;
+                pre=curr;
+            } else {
+                pre[0] = max(prest,currst);
+                pre[1] = min(prend,currend);
+            }
+        }
+        return ans+1;
+    }
+};
