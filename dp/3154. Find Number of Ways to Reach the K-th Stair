@@ -1,0 +1,25 @@
+class Solution {
+public:
+
+    unordered_map<int,unordered_map<int,unordered_map<int,int>>> mp;
+
+    int solverec(int i,int jump,int lastDown,int k){
+        if(i>k+1) return 0;
+
+        if(mp.count(i) && mp[i].count(jump) && mp[i][jump].count(lastDown)){
+            return mp[i][jump][lastDown];
+        }
+
+        int ans = i==k;
+        ans+=solverec(i+pow(2,jump),jump+1,0,k);
+        if(i!=0 && lastDown==0){
+            ans+=solverec(i-1,jump,1,k);
+        }
+        return mp[i][jump][lastDown] = ans;
+    }
+
+    int waysToReachStair(int k) {
+        
+        return solverec(1,0,0,k);
+    }
+};
