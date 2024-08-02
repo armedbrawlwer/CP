@@ -1,0 +1,22 @@
+class Solution {
+public:
+    vector<int> sequentialDigits(int low, int high) {
+        queue<string> q;
+        for(int i=1;i<10;i++)
+        {
+            string s=to_string(i);
+            q.push(s);
+        }
+        while(!q.empty())
+        {
+            string node = q.front();
+            q.pop();
+            int a = stoi(node);
+            if(a>=low && a<=high) ans.push_back(a);
+            char dig=node[node.size()-1];
+            int digit = dig-'0';
+            int next = digit+1;
+            char nex
+        }
+    }
+};
