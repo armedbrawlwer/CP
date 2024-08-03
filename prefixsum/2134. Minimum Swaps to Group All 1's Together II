@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int minSwaps(vector<int>& nums) {
+        int n = nums.size();
+        int tot = 0;
+        for(int i=0;i<n;i++){
+            nums.push_back(nums[i]);
+            tot+=nums[i]==1?1:0;
+        }
+        int j=0;
+        int curr=0;
+        int ans = INT_MAX;
+        for(int i=0;i<2*n-1;i++){
+            curr+=nums[i]==1?1:0;
+            int len = i-j+1;
+            if(len==tot){
+                //shrink the window
+                int swaps = tot-curr;
+                ans=min(ans,swaps);
+                curr-=nums[j]==1?1:0;
+                j+=1;
+            }
+        }
+        return ans==INT_MAX?0:ans;
+
+    }
+};
