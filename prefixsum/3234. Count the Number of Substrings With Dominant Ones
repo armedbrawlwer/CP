@@ -1,0 +1,44 @@
+class Solution {
+public:
+    int numberOfSubstrings(string s) {
+        int n = s.size();
+        int ans = 0;
+        vector<int> prefix(n, 0);
+        for (int i = 0; i < n; i++) {
+            if (s[i] == '1')
+                prefix[i] = 1;
+        }
+        for (int i = 1; i < n; i++) {
+            prefix[i] += prefix[i - 1];
+        }
+        for (int i = 0; i < n; i++) {
+            int zeroes = 0, ones = 0;
+            for (int j = i; j < n; j++) {
+                ones = prefix[j];
+                if (i > 0)
+                    ones -= prefix[i - 1];
+                zeroes = j - i + 1 - ones;
+                if (zeroes * zeroes > ones) {
+                    j += zeroes * zeroes - ones - 1;
+                }
+                if (zeroes * zeroes <= ones) {
+                    ans++;
+                    if (zeroes * zeroes <
+                        ones) // for next substring starting from i
+                    {
+                        int diff = sqrt(ones) - zeroes;
+                        int nextj = j + diff;
+
+                        if (nextj >= n) {
+                            ans += n - j - 1;
+                        } else {
+                            ans += diff;
+                        }
+                        j = nextj;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+};
