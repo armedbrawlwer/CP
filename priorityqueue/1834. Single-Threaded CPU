@@ -1,0 +1,41 @@
+#include <vector>
+#include <queue>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    static bool cmp(const vector<int> &a, const vector<int> &b) {
+        return a[0] < b[0];
+    }
+
+    vector<int> getOrder(vector<vector<int>>& tasks) {
+        int n = tasks.size();
+        vector<vector<int>> v(n);
+        for (int i = 0; i < n; i++) {
+            v[i] = {tasks[i][0], tasks[i][1], i};
+        }
+        sort(v.begin(), v.end(), cmp);
+
+        vector<int> ans;
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+        long long curr = 0;
+        int i = 0;
+
+        while (i < n || !pq.empty()) {
+            if (pq.empty()) {
+                curr = max(curr, (long long)v[i][0]);
+            }
+            while (i < n && curr >= v[i][0]) {
+                pq.push({v[i][1], v[i][2]});
+                i++;
+            }
+            auto task = pq.top();
+            pq.pop();
+            curr += task.first;
+            ans.push_back(task.second);
+        }
+
+        return ans;
+    }
+};
