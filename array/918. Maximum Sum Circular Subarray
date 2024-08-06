@@ -1,0 +1,39 @@
+class Solution {
+public:
+
+    int findminsum(vector<int> &nums,int n){
+        int maxi=INT_MAX,sum=0;
+        for(int i=0;i<n;i++){
+            sum+=nums[i];
+            maxi = min(maxi,sum);
+            if(sum>0){
+                sum=0;
+            }
+        }
+        return maxi;
+    }
+
+    int findmaxsum(vector<int> &nums,int n){
+        int maxi=INT_MIN,sum=0;
+        for(int i=0;i<n;i++){
+            sum+=nums[i];
+            maxi = max(maxi,sum);
+            if(sum<0){
+                sum=0;
+            }
+        }
+        return maxi;
+    }
+
+    int maxSubarraySumCircular(vector<int>& nums) {
+        int n = nums.size();
+        //we can get answer in 2 ways using kadanes algo
+        //one in normal subarray and other involving ciircular component
+        //if we find the minimum sum and subtract from total we get hmax circular
+        int tot = accumulate(nums.begin(),nums.end(),0);
+        int minsum =tot - findminsum(nums,n);
+        int maxsum = findmaxsum(nums,n);
+        if(minsum==0)return maxsum;
+        return max(minsum,maxsum);
+    }
+};
