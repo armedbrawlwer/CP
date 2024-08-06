@@ -1,0 +1,37 @@
+class Solution {
+public:
+    int minimumPushes(string word) {
+        int n = word.size();
+        // there are 8 keys so we can keep a pointer and if encountered a
+        // different letter place in new key and move the pointer
+        // store each letter along with count and letter with max count should
+        // be given priority
+        vector<vector<char>> v;
+        for (int i = 0; i < 8; i++) {
+            vector<char> t;
+            v.push_back(t);
+        }
+        priority_queue<pair<int, char>> pq;
+        unordered_map<char, int> mp;
+        // now traverse the string
+        for (auto i : word) {
+            mp[i]++;
+        }
+        for (auto i : mp) {
+            pq.push({i.second, i.first});
+        }
+        int pointer = 0;
+        int ans = 0;
+        while (!pq.empty()) {
+            auto i = pq.top();
+            pq.pop();
+            char curr = i.second;
+            int ctr = i.first;
+            v[pointer].push_back(curr);
+            int col = v[pointer].size() - 1;
+            ans += (col + 1) * ctr;
+            pointer = (pointer + 1) % 8;
+        }
+        return ans;
+    }
+};
