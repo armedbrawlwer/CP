@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int longestSubarray(vector<int>& nums) {
+        // we would want to delete the 0 from subarray
+        int totzereos = 0;
+        int n = nums.size();
+        int ctr = 0;
+        int j = 0;
+        int ans = INT_MIN;
+        int del = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == 0) {
+                ctr += 1;
+            }
+            // looking in the current window
+
+            while (ctr > 1) {
+
+                nums[j] == 0 ? ctr -= 1 : ctr -= 0;
+                j += 1;
+            }
+            int len = i - j + 1;
+            ans = max(len-1,ans);
+        }
+        return ans;
+    }
+};
