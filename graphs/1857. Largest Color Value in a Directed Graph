@@ -1,0 +1,49 @@
+class Solution {
+public:
+    int largestPathValue(string colors, vector<vector<int>>& edges) {
+        int n = colors.size();
+        vector<int> indegree(n, 0);
+        vector<vector<int>> graph(n);
+        
+        // Build the graph and calculate indegree of each node
+        for (const auto& edge : edges) {
+            graph[edge[0]].push_back(edge[1]);
+            indegree[edge[1]]++;
+        }
+
+        // Kahn's algorithm for Topological Sorting
+        queue<int> q;
+        vector<vector<int>> colorCount(n, vector<int>(26, 0));
+
+        // Add all nodes with indegree 0 to the queue
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) {
+                q.push(i);
+                colorCount[i][colors[i] - 'a'] = 1;
+            }
+        }
+
+        int processedNodes = 0;
+        int maxColorValue = 0;
+
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+            processedNodes++;
+
+            for (int neighbor : graph[node]) {
+                for (int c = 0; c < 26; c++) {
+                    colorCount[neighbor][c] = max(colorCount[neighbor][c], colorCount[node][c] + (colors[neighbor] - 'a' == c ? 1 : 0));
+                }
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0) {
+                    q.push(neighbor);
+                }
+            }
+            
+            maxColorValue = max(maxColorValue, *max_element(colorCount[node].begin(), colorCount[node].end()));
+        }
+
+        return processedNodes == n ? maxColorValue : -1;
+    }
+};
