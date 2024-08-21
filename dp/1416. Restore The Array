@@ -1,0 +1,32 @@
+class Solution {
+public:
+    int mod = 1e9 + 7;
+
+    int solverec(string &s, int &k, int i, vector<int>& dp) {
+        if (i >= s.size()) // Base case: if we've processed the entire string
+            return 1;
+        if (s[i] == '0') // Leading zeros are not valid for any partition
+            return 0;
+        if (dp[i] != -1) // If the result is already calculated, return it
+            return dp[i];
+        
+        int ways = 0;
+        long long num = 0;
+        for (int j = i; j < s.size(); j++) {
+            // Convert the substring s[i...j] to a number incrementally
+            num = num * 10 + (s[j] - '0');
+            if (num > k) // If the number exceeds k, no need to check further
+                break;
+            // Continue to the next part of the string
+            ways = (ways + solverec(s, k, j + 1, dp)) % mod;
+        }
+        return dp[i] = ways; // Save and return the result
+    }
+    
+
+    int numberOfArrays(string s, int k) {
+        int n = s.size();
+        vector<int> dp(n + 1, -1); // DP array with -1 initialization
+        return solverec(s, k, 0, dp); // Start the recursive function
+    }
+};
