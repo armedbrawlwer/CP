@@ -1,0 +1,48 @@
+class Solution {
+public:
+    int mod = 1e9 + 7;
+    int mini;
+    int jobs;
+    int N;
+
+    int solverec(vector<int>& group, vector<int>& profit, int people, int i,
+                 int cost, vector<vector<vector<int>>>& dp) {
+
+        if (people > N)  // If more people are used than available, this is invalid
+            return 0;
+
+        if (i >= jobs) {  // If all jobs have been considered
+            if (cost >= mini)  // If the profit meets or exceeds the minimum required
+                return 1;
+            else
+                return 0;
+        }
+        if (dp[i][cost][people] != -1)  // If the result is already computed
+            return dp[i][cost][people];
+
+        int ways = 0;
+        // Option 1: Skip the current job
+        ways = (ways + solverec(group, profit, people, i + 1, cost, dp)) % mod;
+
+        // Option 2: Take the current job, add its group size to people, and profit to cost
+        if (people + group[i] <= N) {  // Ensure we don't exceed the people limit
+            ways = (ways + solverec(group, profit, people + group[i], i + 1,
+                                    min(mini, cost + profit[i]), dp)) % mod;
+        }
+
+        return dp[i][cost][people] = ways;  // Store and return the computed result
+    }
+
+    int profitableSchemes(int n, int minProfit, vector<int>& group,
+                          vector<int>& profit) {
+        jobs = group.size();
+        N = n;
+        mini = minProfit;
+
+        // DP array: jobs, profit, and people (dimensions are based on problem constraints)
+        vector<vector<vector<int>>> dp(jobs + 1, vector<vector<int>>(minProfit + 1, vector<int>(n + 1, -1)));
+
+        // Start recursion with the initial state: 0 people used, 0 profit earned
+        return solverec(group, profit, 0, 0, 0, dp);
+    }
+};
