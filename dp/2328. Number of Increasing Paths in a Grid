@@ -1,0 +1,45 @@
+class Solution {
+public:
+
+    int m,n;
+    int dr[4]={-1,1,0,0};
+    int dc[4]={0,0,-1,1};
+    int mod = 1e9+7;
+
+
+    int solverec(vector<vector<int>>& grid,int i,int j,int dp[][1001]){
+        if(dp[i][j]!=-1)return dp[i][j];
+        int node=1;
+        
+        for(int k=0;k<4;k++){
+            int nr = i+dr[k];
+            int nc = j+dc[k];
+            if(nr>=0 && nc>=0 && nr<m && nc<n && grid[nr][nc]>grid[i][j]){
+                node=(node+solverec(grid,nr,nc,dp))%mod;
+            }
+        }
+        return dp[i][j]= node;
+
+    }
+    
+    //straight forward question
+    //dont have to keep vis track as conditions are alone suffiveient 
+    //also from each node we have to calculate distancec
+
+    int countPaths(vector<vector<int>>& grid) {
+        m = grid.size();
+        n = grid[0].size();
+        int ans=0;
+        // vector<vector<int>> vis(m,vector<int>(n,0));
+        int dp[1001][1001];
+        memset(dp,-1,sizeof(dp));
+
+
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                    ans = (ans + solverec(grid,i,j,dp))%mod;
+            }
+        }
+        return ans;
+    }
+};
