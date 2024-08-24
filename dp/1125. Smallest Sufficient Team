@@ -1,0 +1,63 @@
+class Solution {
+public:
+    int all, n;
+    vector<int> ans;
+    vector<int> temp;
+    unordered_map<string, int> mp;
+
+    // in the solverec function only i and mask is changing
+    unordered_map<string, int> dp;
+
+    void solverec(vector<int>& arr, int i, int mask) {
+        if (mask == all) {
+            if (ans.empty() || temp.size() < ans.size()) {
+                ans = temp;
+            }
+            return;
+        }
+        if (i >= arr.size())
+            return;
+        string key = to_string(i) + " " + to_string(mask);
+        if (dp.find(key) != dp.end()) {
+            if (dp[key] <= temp.size())
+                return;
+        }
+
+        solverec(arr, i + 1, mask);
+
+        // it is time consuming creating new masks every time
+        int new_mask = mask | arr[i];
+
+        temp.push_back(i);
+        solverec(arr, i + 1, new_mask);
+        temp.pop_back();
+        dp[key] = temp.size() != 0 ? temp.size() : -1;
+    }
+
+    vector<int> smallestSufficientTeam(vector<string>& arr,
+                                       vector<vector<string>>& people) {
+        n = arr.size();
+        all = (1 << n) - 1;
+        // should we consider a person or their skills for each
+        // for each person we have two choice
+
+        for (int i = 0; i < arr.size(); i++) {
+            mp[arr[i]] = i;
+        }
+
+        // it is time consuming creating new masks every time
+        // lets create a vector that stores the skills mask bitset for each
+        // person
+        vector<int> skills;
+        for (auto i : people) {
+            int mask = 0;
+            for (auto str : i) {
+                mask |=(1<<mp[str]);
+            }
+            skills.push_back(mask);
+        }
+
+        solverec(skills, 0, 0);
+        return ans;
+    }
+};
