@@ -1,0 +1,44 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+unordered_map<int,unordered_map<int,vector<TreeNode*>>> dp;
+
+    vector<TreeNode*> solverec(int start,int last){
+        if(start>last)return {NULL};
+        if(start == last){
+            TreeNode* node= new TreeNode(start);
+            return {node};
+        }
+        if(dp.find(start)!=dp.end() && dp[start].find(last)!=dp[start].end())return dp[start][last];
+
+        vector<TreeNode*>res;
+        for(int i=start;i<=last;i++){
+            vector<TreeNode*>lt = solverec(start,i-1);
+            vector<TreeNode*>rt = solverec(i+1,last);
+
+            for(auto lt_tree:lt){
+                for(auto rt_tree:rt){
+                    TreeNode* node = new TreeNode(i);
+                    node->left = lt_tree;
+                    node->right= rt_tree;
+                    res.push_back(node);
+                }
+            }
+        }
+        return dp[start][last]=res;
+    }
+
+    vector<TreeNode*> generateTrees(int n) {
+        return solverec(1,n);
+    }
+};
