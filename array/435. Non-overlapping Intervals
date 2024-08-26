@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int eraseOverlapIntervals(vector<vector<int>>& intervals) {
+        int n = intervals.size();
+        sort(intervals.begin(),intervals.end());
+        int ans=0;
+        vector<int> pre = intervals[0];
+        for(int i=1;i<n;i++){
+            vector<int> curr = intervals[i];
+            if(curr[0]>=pre[1]){
+                pre=curr;
+            }
+            else if(pre[1]>curr[0]){
+                //think greedly=>one with larger endpoint has a
+                //  chance of overlapping withother so remove it
+                if(curr[1]<pre[1])pre=curr;
+                ans+=1;
+            }
+        }
+        return ans;
+    }
+};
