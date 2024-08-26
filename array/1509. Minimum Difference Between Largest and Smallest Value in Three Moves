@@ -5,6 +5,10 @@ public:
 
         // If the array has 4 or fewer elements, return 0
         if (numsSize <= 4) return 0;
+//the first intution was to perform two binary searches=>
+        //one manipulatin max and other min lelement
+        //but answer can be obtained from combination of both also
+
 
         sort(nums.begin(), nums.end());
 
