@@ -1,0 +1,39 @@
+class Solution {
+public:
+    int ans;
+    string str;
+
+    int solverec(int node, unordered_map<int, list<int>>& mp, int parent) {
+        int longest = 0, secondLongest = 0;
+        for (auto i : mp[node]) {
+            if (i == parent)
+                continue;
+            int dist = solverec(i, mp, node);
+            if (str[node] == str[i]) //cannot add in if as lower subtrees would not have been computed
+                continue;
+            if (dist > secondLongest)
+                secondLongest = dist;
+            if (secondLongest > longest)
+                swap(longest, secondLongest);
+        }
+        int d1 = 1 + max(longest, secondLongest);
+        int d2 = longest + secondLongest + 1;
+        int d3 = 1;
+        ans = max({ans, d3, d2, d1});
+        return max(d1, d3);
+    }
+
+    int longestPath(vector<int>& parent, string s) {
+        str = s;
+        unordered_map<int, list<int>> mp;
+        for (int i = 1; i < parent.size(); i++) {
+            mp[i].push_back(parent[i]);
+            mp[parent[i]].push_back(i);
+        }
+        // it is possible that we may also have secondlargeseet path from node
+        // that can get as longest
+        ans = 0;
+        solverec(0, mp, -1);
+        return ans;
+    }
+};
