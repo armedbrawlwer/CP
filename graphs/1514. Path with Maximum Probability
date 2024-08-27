@@ -1,0 +1,43 @@
+class Solution {
+public:
+    double maxProbability(int n, vector<vector<int>>& edges, vector<double>& succ, int st, int end) {
+        // Adjacency list to store graph with probabilities
+        unordered_map<int, list<pair<int, double>>> mp;
+        
+        // Build the graph: node -> [(neighbor, probability)]
+        for (int i = 0; i < edges.size(); ++i) {
+            int u = edges[i][0];
+            int v = edges[i][1];
+            double prob = succ[i];
+            mp[u].emplace_back(v, prob);
+            mp[v].emplace_back(u, prob);
+        }
+        
+        // Distance vector to store the maximum probability to reach each node
+        vector<double> dist(n, 0.0);
+        dist[st] = 1.0;
+        
+        // Max-heap to explore the most promising nodes first
+        priority_queue<pair<double, int>> pq;
+        pq.push({1.0, st});
+        
+        // Dijkstra-like traversal using max probability instead of min distance
+        while (!pq.empty()) {
+            auto [prob, node] = pq.top();
+            pq.pop();
+            
+            
+            for (auto& [nei, edgeProb] : mp[node]) {
+                double newProb = prob * edgeProb;
+                
+                // If a higher probability path to neighbor is found
+                if (newProb > dist[nei]) {
+                    dist[nei] = newProb;
+                    pq.push({newProb, nei});
+                }
+            }
+        }
+        
+        return dist[end];
+    }
+};
