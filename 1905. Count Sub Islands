@@ -1,0 +1,108 @@
+// class Solution {
+// public:
+//     int dr[4] = {-1, 1, 0, 0}, dc[4] = {0, 0, -1, 1};
+//     int m, n;
+
+//     void markvis(vector<vector<int>>& w, int r, int c,
+//                  vector<vector<bool>>& vis) {
+//         vis[r][c] = 1;
+//         for (int k = 0; k < 4; k++) {
+//             int nr = r + dr[k];
+//             int nc = c + dc[k];
+//             if (nr >= 0 && nc >= 0 && nr < m && nc < n && w[nr][nc] == 1 &&
+//                 vis[nr][nc] == 0) {
+//                 vis[nr][nc] = 1;
+//                 markvis( w, nr, nc, vis);
+//             }
+//         }
+//     }
+
+//     int solverec(vector<vector<int>>& v, vector<vector<int>>& w, int r, int c,
+//                  vector<vector<bool>>& vis) {
+//         if (w[r][c] == 1 && v[r][c] == 0)
+//             return false;
+//         vis[r][c] = 1;
+//         for (int k = 0; k < 4; k++) {
+//             int nr = r + dr[k];
+//             int nc = c + dc[k];
+//             if (nr >= 0 && nc >= 0 && nr < m && nc < n && w[nr][nc] == 1 &&
+//                 vis[nr][nc] == 0) {
+//                 vis[nr][nc] = 1;
+
+//                 bool ans = solverec(v, w, nr, nc, vis);
+//                 if (ans == false) {
+//                     vis[nr][nc] = 0;
+//                     return false;
+//                 }
+//             }
+//         }
+//         return true;
+//     }
+
+//     int countSubIslands(vector<vector<int>>& v, vector<vector<int>>& w) {
+//         m = v.size();
+//         n = v[0].size();
+//         int res = 0;
+//         vector<vector<bool>> vis(m, vector<bool>(n, false));
+//         for (int i = 0; i < m; i++) {
+//             for (int j = 0; j < n; j++) {
+//                 if (w[i][j] == 1 && vis[i][j] == 0) {
+//                     vis[i][j] = 1;
+//                     bool ans = solverec(v, w, i, j, vis) == true ? 1 : 0;
+//                     if (ans == false) {
+//                         markvis(w, i, j, vis);
+//                     }
+//                     res += ans;
+//                 }
+//             }
+//         }
+//         return res;
+//     }
+// };
+
+class Solution {
+private:
+    void dfs(int row, int col, vector<vector<int>>& grid1, vector<vector<int>>& grid2, vector<vector<int>> &visited,  int &cnt, int &cnt2){
+        visited[row][col] = 1;
+
+        int n = grid1.size();
+        int m = grid1[0].size();
+
+        int delrow[] = {-1, 0, 1, 0};
+        int delcol[] = {0, 1, 0, -1};
+
+        for(int i = 0; i < 4; i++){
+            int nrow = row + delrow[i];
+            int ncol = col + delcol[i];
+
+            if(nrow >= 0 && nrow < n && ncol >= 0 && ncol < m && !visited[nrow][ncol] && grid2[nrow][ncol] == 1){
+                if(grid1[nrow][ncol] == 1){
+                    dfs(nrow, ncol, grid1, grid2, visited, cnt, cnt2);
+                }
+                else{
+                    cnt2++;
+                }
+            }
+        }
+        return;
+    }
+public:
+    int countSubIslands(vector<vector<int>>& grid1, vector<vector<int>>& grid2) {
+        int n = grid1.size();
+        int m = grid1[0].size();
+
+        vector<vector<int>> visited(n, vector<int>(m, 0));
+        int cnt = 0;
+
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                int cnt2 = 0;
+                if(grid2[i][j] == 1 && grid1[i][j] == 1 && !visited[i][j]){
+                    dfs(i, j, grid1, grid2, visited, cnt, cnt2);
+                    if(cnt2 == 0) cnt++;
+                }
+            }
+        }
+        return cnt;
+    }
+};
