@@ -1,0 +1,39 @@
+class Solution {
+public:
+    void solverec(TreeNode* root, int val, int ctr, int depth) {
+        if (!root) return; // Base case: if root is nullptr, return
+        
+        if (ctr == depth - 1) {
+            TreeNode* node = new TreeNode(val);
+            if (root->left) {
+                TreeNode* leftNode = root->left;
+                root->left = node;
+                node->left = leftNode;
+            } else {
+                root->left = node;
+            }
+            
+            TreeNode* newNode = new TreeNode(val);
+            if (root->right) {
+                TreeNode* rightNode = root->right;
+                root->right = newNode;
+                newNode->right = rightNode;
+            } else {
+                root->right = newNode;
+            }
+            return;
+        }
+        solverec(root->left, val, ctr+1, depth);
+        solverec(root->right, val, ctr+1, depth);
+    }
+
+    TreeNode* addOneRow(TreeNode* root, int val, int depth) {
+        if (depth == 1) {
+            TreeNode* node = new TreeNode(val);
+            node->left = root;
+            return node;
+        }
+        solverec(root, val, 1, depth);
+        return root;
+    }
+};
