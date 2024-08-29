@@ -1,0 +1,53 @@
+class Solution {
+public:
+    vector<int> rank;
+    vector<int> parent;
+
+    int findParent(int x) {
+        if (parent[x] == x)
+            return x;
+        return parent[x] = findParent(parent[x]);
+    }
+    void Union(int x, int y) {
+        int parx = findParent(x);
+        int pary = findParent(y);
+
+        if (parx != pary) {
+            if (rank[parx] > rank[pary]) {
+                parent[pary] = parx;
+            } else if (rank[pary] > rank[parx]) {
+                parent[parx] = pary;
+            } else {
+                parent[pary] = parx;
+                rank[parx]++;
+            }
+        }
+        return;
+    }
+
+    int removeStones(vector<vector<int>>& stones) {
+        int n = stones.size();
+        rank.resize(n, 1);
+        parent.resize(n);
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+            rank[i]=1;
+        }
+        //find all possingle pairs of parent and children
+        for(int i=0;i<n;i++){
+            auto par = stones[i];
+            for(int j=i+1;j<n;j++){
+                auto child = stones[j];
+                if(par[0]==child[0] || par[1]==child[1]){
+                    Union(i,j);
+                }
+            }
+        }
+        //find all groups that are not their own parents
+        int groups=0;
+        for(int i=0;i<n;i++){
+            if(parent[i]==i)groups++;
+        }
+        return n-groups;
+    }
+};
