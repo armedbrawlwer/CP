@@ -1,0 +1,33 @@
+class Solution {
+public:
+
+    int dp[101][1030];
+
+    int solverec(map<int,vector<int>> &arr,int idx,int mask)
+    {
+        if(idx<=0)return 0;
+        if(dp[idx][mask]!=-1)return dp[idx][mask];
+
+        int res = solverec(arr,idx-1,mask);
+        for(auto row:arr[idx]){
+            if((mask & (1<<row)) == 0){
+                res = max(res,idx+solverec(arr,idx-1,(mask | 1<<row)));
+            }
+        }
+        return dp[idx][mask] = res;
+    }
+
+
+    int maxScore(vector<vector<int>>& grid) {
+        int m = grid.size();
+        int n = grid[0].size();
+        map<int,vector<int>> arr;
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                arr[grid[i][j]].push_back(i);
+            }
+        }
+        memset(dp,-1,sizeof(dp));
+        return solverec(arr,100,0);
+    }
+};
