@@ -1,0 +1,33 @@
+class Solution {
+public:
+    vector<int> missingRolls(vector<int>& rolls, int mean, int n) {
+        vector<int>ans;
+        int m=rolls.size();int sum=0;
+        for(int i=0;i<m;i++){
+           sum=sum+rolls[i];
+        }
+        int reqsum=(m+n)*mean-sum;
+        if(reqsum <n || reqsum>6*n )return ans;
+        else{
+            vector<int>mainans(n,reqsum/n);
+            reqsum=reqsum-mainans[0]*n;
+            int k=0;
+            while(reqsum!=0){
+                if(reqsum> 6-mainans[k]){
+                   reqsum=reqsum-(6-mainans[k]);
+                   mainans[k]=6;
+                   k++;
+
+                }
+                else{
+                    mainans[k]=mainans[k]+reqsum;
+                    reqsum=0;
+                    return mainans;
+                }
+            }
+            return mainans;
+        }
+        return ans;
+
+    }
+};
