@@ -1,0 +1,47 @@
+class Solution {
+public:
+    // does  not handle the cases where path can be found in left subtree after
+    // a particular node does not match and path may be found later
+
+    // shall do dfs for each matching node
+
+    bool dfs(TreeNode* root, ListNode* head) {
+        if (head == NULL)
+            return true;
+        if (root == NULL)
+            return false;
+
+        if (head->val == root->val) {
+            return dfs(root->left, head->next) || dfs(root->right, head->next);
+        }
+        return false;
+    }
+
+    bool isSubPath(ListNode* head, TreeNode* root) {
+        // if (root == NULL) {
+        //     if (head == NULL)
+        //         return true;
+        //     return false;
+        // }
+        // if (head == NULL)
+        //     return true;
+
+        // bool a1 = false, a2 = false, a3 = false, a4 = false;
+
+        // if (head->val == root->val) {
+        //     a1 = isSubPath(head->next, root->left);
+        //     a2 = isSubPath(head->next, root->right);
+
+        // } else {
+        //     a3 = isSubPath(head, root->left);
+        //     a4 = isSubPath(head, root->right);
+        // }
+
+        // return a1 || a2 || a3 || a4;
+        if (root == NULL)
+            return false;
+
+        return dfs(root, head) || isSubPath(head, root->left) ||
+               isSubPath(head, root->right);
+    }
+};
