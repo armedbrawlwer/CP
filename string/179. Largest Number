@@ -1,0 +1,28 @@
+class Solution {
+public:
+    string largestNumber(vector<int>& nums) {
+        // Convert all numbers to strings
+        vector<string> strNums;
+        for (int num : nums) {
+            strNums.push_back(to_string(num));
+        }
+        
+        // Custom comparator to decide the order of concatenation
+        sort(strNums.begin(), strNums.end(), [](const string &a, const string &b) {
+            return a + b > b + a;
+        });
+        
+        // If the largest number is '0', the entire number is 0
+        if (strNums[0] == "0") {
+            return "0";
+        }
+        
+        // Concatenate the sorted strings
+        string result;
+        for (const string &numStr : strNums) {
+            result += numStr;
+        }
+        
+        return result;
+    }
+};
