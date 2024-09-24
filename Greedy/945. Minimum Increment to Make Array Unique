@@ -1,0 +1,29 @@
+class Solution {
+public:
+    int minIncrementForUnique(vector<int>& nums) {
+        int n = nums.size();
+        if (n == 0) return 0;
+        
+        int maxi = *max_element(nums.begin(), nums.end());
+        vector<int> v(maxi + n, 0); // Extend the size to accommodate possible increments
+        
+        // Count the occurrences of each number
+        for (auto i : nums) {
+            v[i]++;
+        }
+        
+        int op = 0;
+        
+        // Traverse the array to ensure all elements are unique
+        for (int i = 0; i < v.size() - 1; i++) {
+            if (v[i] > 1) {
+                int excess = v[i] - 1;
+                v[i] -= excess;
+                v[i + 1] += excess;
+                op += excess;
+            }
+        }
+        
+        return op;
+    }
+};
