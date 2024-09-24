@@ -1,0 +1,63 @@
+class TrieNode {
+public:
+    bool isend;
+    TrieNode* children[10];
+    TrieNode() {
+        for (int i = 0; i < 10; i++) {
+            children[i] = NULL;
+        }
+        isend = false;
+    }
+};
+
+class Trie {
+private:
+    TrieNode* root;
+
+public:
+    Trie() { root = new TrieNode(); }
+
+    void insert(string s) {
+        TrieNode* node = root;
+        for (auto ch : s) {
+            int index = ch - '0';
+
+            if (node->children[index] == nullptr) {
+                node->children[index] = new TrieNode();
+            }
+            node = node->children[index];
+        }
+        node->isend = 1;
+    }
+    int getLongestPrefix(string str) {
+        int len = 0;
+        TrieNode* node = root;
+        for (auto ch : str) {
+            int index = ch - '0';
+            if (node->children[index] != nullptr) {
+                len++;
+                node = node->children[index];
+            } else {
+                break;
+            }
+        }
+        return len;
+    }
+};
+
+class Solution {
+public:
+    int longestCommonPrefix(vector<int>& arr1, vector<int>& arr2) {
+        Trie* trie = new Trie();
+        for(auto num:arr1)
+        {
+            trie->insert(to_string(num));
+        }
+        int ans=0;
+        for(auto num:arr2)
+        {
+            ans = max(ans,trie->getLongestPrefix(to_string(num)));
+        }
+        return ans;
+    }
+};
