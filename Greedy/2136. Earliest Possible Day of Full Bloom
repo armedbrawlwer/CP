@@ -1,0 +1,26 @@
+class Solution {
+public:
+    int earliestFullBloom(vector<int>& pt, vector<int>& gt) {
+        // Create a vector of pairs where each pair is (grow time, plant time)
+        vector<pair<int, int>> v;
+        int n = pt.size();
+        for (int i = 0; i < n; i++) {
+            v.push_back({gt[i], pt[i]});
+        }
+        
+        // Sort the vector in descending order of grow time
+        sort(v.rbegin(), v.rend());
+        
+        int planttime = 0; // Accumulated planting time
+        int ans = 0;       // The earliest day when all flowers are fully bloomed
+        
+        // Iterate over the sorted plants
+        for (int i = 0; i < n; i++) {
+            planttime += v[i].second;  // Add the plant time
+            ans = max(ans, planttime + v[i].first);  // Update the answer with the maximum full bloom time
+        }
+        //first plant tree taht takes longest to grow
+        
+        return ans;
+    }
+};
