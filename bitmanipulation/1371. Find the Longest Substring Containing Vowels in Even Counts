@@ -1,0 +1,35 @@
+class Solution {
+public:
+    unordered_map<char, int> mp;
+    set<char> st = {'a', 'e', 'i', 'o', 'u'};
+
+    bool isvowel(char c) {
+        return st.find(c) != st.end();
+    }
+
+    int findTheLongestSubstring(string s) {
+        int n = s.size();
+        string str = "00000"; // To store the parity of vowels
+        int ans = 0;
+        unordered_map<string, int> pre;
+        pre[str] = -1;  // Initialize with -1 since we consider substrings starting from index 0
+
+        mp = {{'a', 0}, {'e', 1}, {'i', 2}, {'o', 3}, {'u', 4}};
+        
+        for (int i = 0; i < n; i++) {
+            if (isvowel(s[i])) {
+                int char_ind = mp[s[i]];
+                int str_ele = str[char_ind] - '0';
+                str_ele = (str_ele + 1) % 2;
+                str[char_ind] = str_ele + '0';
+            }
+
+            if (pre.find(str) != pre.end()) {
+                ans = max(ans, i - pre[str]);
+            } else {
+                pre[str] = i;
+            }
+        }
+        return ans;
+    }
+};
