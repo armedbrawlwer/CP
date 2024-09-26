@@ -1,0 +1,26 @@
+class MyCalendar {
+public:
+    std::set<std::pair<int, int>> st;
+
+    MyCalendar() { }
+
+    bool book(int start, int end) {
+        auto itr = st.lower_bound({start, end});
+
+        // Check if there's an overlap with the next event (iterator returned by lower_bound)
+        if (itr != st.end() && itr->first < end) {
+            // The next event starts before the current event ends
+            return false;
+        }
+        if (itr != st.begin()) {
+            auto prev = std::prev(itr);
+            if (prev->second > start) {
+                return false;
+            }
+        }
+
+        st.insert({start, end});
+        return true;
+    }
+};
+
