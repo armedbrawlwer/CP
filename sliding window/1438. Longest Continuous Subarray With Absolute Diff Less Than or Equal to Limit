@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int longestSubarray(vector<int>& nums, int limit) {
+        // AGAR maxi aur mini mein difference kam hoga to sabme hogam
+        int n = nums.size();
+        priority_queue<pair<int, int>> maxi;
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>mini;
+        int j = 0;
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            mini.push({nums[i], i});
+            maxi.push({nums[i], i});
+            // condition where diffrence is greater than limit
+            if (maxi.top().first - mini.top().first > limit) {
+                j = min(maxi.top().second, mini.top().second) + 1;
+            }
+            while (maxi.top().second < j) {
+                maxi.pop();
+            }
+            while (mini.top().second < j) {
+                mini.pop();
+            }
+
+            ans = max(ans, i - j + 1);
+        }
+        return ans;
+    }
+};
