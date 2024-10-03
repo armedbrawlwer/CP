@@ -2,21 +2,25 @@ class Solution {
 public:
     vector<int> sequentialDigits(int low, int high) {
         queue<string> q;
-        for(int i=1;i<10;i++)
-        {
-            string s=to_string(i);
-            q.push(s);
+        for (int i = 1; i < 10; i++) {
+            string str = to_string(i);
+            q.push(str);
         }
-        while(!q.empty())
-        {
+        vector<int> ans;
+        while (!q.empty()) {
             string node = q.front();
             q.pop();
-            int a = stoi(node);
-            if(a>=low && a<=high) ans.push_back(a);
-            char dig=node[node.size()-1];
-            int digit = dig-'0';
-            int next = digit+1;
-            char nex
+            int ele = stoi(node);
+            if (ele >= low && ele <= high) {
+                ans.push_back(ele);
+            }
+            char currchar = node[node.size() - 1];
+            if (currchar != '9') {
+                char nextchar = ((currchar - '0') + 1) + '0';
+                string nextstr = node + nextchar;
+                q.push(nextstr);
+            }
         }
+        return ans;
     }
 };
