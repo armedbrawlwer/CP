@@ -1,0 +1,60 @@
+class trienode {
+public:
+    trienode* children[26];
+    trienode() {
+        for (int i = 0; i < 26; i++) {
+            children[i] = NULL;
+        }
+    }
+};
+
+class trie {
+public:
+    trienode* root;
+    trie() {
+        root = new trienode();
+    }
+
+    void insert(string str) {
+        trienode* node = root;
+        for (auto ch : str) {
+            if (node->children[ch - 'a'] == NULL) {
+                node->children[ch - 'a'] = new trienode();
+            }
+            node = node->children[ch - 'a'];
+        }
+    }
+
+    bool searchPrefix(string& s, int start, vector<int>& dp) {
+        trienode* node = root;
+        for (int i = start; i < s.size(); i++) {
+            if (node->children[s[i] - 'a'] == NULL)
+                return false;
+            node = node->children[s[i] - 'a'];
+            dp[i + 1] = min(dp[i + 1], dp[start] + 1);
+        }
+        return true;
+    }
+};
+
+class Solution {
+public:
+    int minValidStrings(vector<string>& words, string target) {
+        trie* tr = new trie();
+        for (auto str : words) {
+            tr->insert(str);
+        }
+
+        int n = target.size();
+        vector<int> dp(n + 1, 1e6);
+        dp[0] = 0;  
+
+        for (int i = 0; i < n; i++) {
+            if (dp[i] != 1e6) {  
+                tr->searchPrefix(target, i, dp);
+            }
+        }
+
+        return dp[n] == 1e6 ? -1 : dp[n];
+    }
+};
