@@ -1,0 +1,21 @@
+class Solution {
+public:
+    int minPatches(vector<int>& nums, int n) {
+        int ans =0;
+        long long maxi=0;
+        int i=0;
+        int m = nums.size();
+        while(maxi<n)
+        {
+            if(i<m && maxi+1>=nums[i])
+            {
+                maxi+=nums[i];
+                i++;
+            } else {
+                maxi+=maxi+1;
+                ans++;
+            }
+        }
+        return ans;
+    }
+};
