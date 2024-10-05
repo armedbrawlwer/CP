@@ -1,0 +1,21 @@
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        int n = gas.size();
+        int ans = 0;
+        // agar total earning is more than cost than we get a solution
+        long long totcost = accumulate(cost.begin(), cost.end(), 1LL * 0);
+        long long totearn = accumulate(gas.begin(), gas.end(), 1LL * 0);
+        if (totcost > totearn)
+            return -1;
+        int total = 0;
+        for (int i = 0; i < n; i++) {
+            total += gas[i] - cost[i];
+            if (total < 0) {
+                ans = i + 1;
+                total = 0;
+            }
+        }
+        return ans;
+    }
+};
