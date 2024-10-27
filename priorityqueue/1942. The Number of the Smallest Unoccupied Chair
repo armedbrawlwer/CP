@@ -1,0 +1,35 @@
+typedef pair<int, int> P;
+
+class Solution {
+public:
+    int smallestChair(vector<vector<int>>& arr, int k) {
+        int n = arr.size();
+        int arrtime = arr[k][0];
+        priority_queue<P, vector<P>, greater<P>> occ;
+        priority_queue<int, vector<int>, greater<int>> free;
+        int chair = 0;
+        sort(arr.begin(), arr.end());
+        for (int i = 0; i < n; i++) {
+            // free the occupied chairs
+            int st = arr[i][0], end = arr[i][1];
+
+            if (free.empty()) {
+                free.push(chair);
+                chair++;
+            }
+
+            while (!occ.empty() && occ.top().first <= st) {
+                free.push(occ.top().second);
+                occ.pop();
+            }
+
+            if (st == arrtime) {
+                return free.top();
+            }
+
+            occ.push({end, free.top()});
+            free.pop();
+        }
+        return 0;
+    }
+};
