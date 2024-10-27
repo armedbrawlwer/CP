@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int minGroups(vector<vector<int>>& arr) {
+        int n = arr.size();
+        int ans = 1;
+        sort(arr.begin(),arr.end());
+        priority_queue<int,vector<int>,greater<int>> pq;
+        // pq.push(arr[0][1]);
+        for(int i=0;i<n;i++)
+        {
+            int st = arr[i][0];
+            int end = arr[i][1];
+            //if starting of  is larger than endinf of grp no problme
+            if(!pq.empty() && pq.top()<st)
+            {
+                pq.pop();
+            }
+            pq.push(end);
+        }
+        return pq.size();
+    }
+};
