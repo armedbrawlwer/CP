@@ -1,0 +1,26 @@
+class Solution {
+public:
+    int n;
+    int dp[201][201][201];
+    int mod=1e9+7;
+
+    int solve(int i, vector<int>& nums, int first, int last) {
+        // first=>gcd of first seqeunce till now
+        if (i == n)
+            return (first && last) && (first == last);
+        if (dp[i][first][last] != -1)
+            return dp[i][first][last];
+
+        int w1 = solve(i + 1, nums, first, last);
+        int w2 = solve(i + 1, nums, __gcd(first, nums[i]), last);
+        int w3 = solve(i + 1, nums, first, __gcd(last, nums[i]));
+
+        return dp[i][first][last] = (0LL + w1 + w2 + w3)%mod;
+    }
+
+    int subsequencePairCount(vector<int>& nums) {
+        n = nums.size();
+        memset(dp, -1, sizeof(dp));
+        return solve(0, nums, 0, 0);
+    }
+};
