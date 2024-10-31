@@ -1,0 +1,40 @@
+class Solution {
+public:
+    int n, m;
+    vector<vector<long long>> dp; 
+    
+    long long solve(vector<int>& robot, vector<vector<int>>& factory, int i, int j) {
+        if (i == n) return 0LL; 
+        if (j == m) return 1e12; 
+        
+        if (dp[i][j] != -1) return dp[i][j];
+        
+        long long dist = solve(robot, factory, i, j + 1);]
+        
+        int pos = factory[j][0], limit = factory[j][1];
+        long long currDist = 0;
+        
+        for (int k = 0; k < limit && i + k < n; ++k) {
+            currDist += abs((long long)pos - (long long)robot[i + k]);
+            dist = min(dist, currDist + solve(robot, factory, i + k + 1, j + 1));
+        }
+        
+        return dp[i][j] = dist;
+        
+    }
+    
+    long long minimumTotalDistance(vector<int>& robot, vector<vector<int>>& factory) {
+        n = robot.size();
+        m = factory.size();
+        
+        // Sort robots and factories to minimize distance
+        sort(robot.begin(), robot.end());
+        sort(factory.begin(), factory.end());
+        
+        // Initialize DP table with -1 (uncomputed)
+        dp.assign(n + 1, vector<long long>(m + 1, -1));
+        
+        // Start DP with first robot and factory
+        return solve(robot, factory, 0, 0);
+    }
+};
