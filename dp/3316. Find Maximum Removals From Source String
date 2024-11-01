@@ -1,0 +1,49 @@
+class Solution {
+public:
+    int m, n;
+    set<int> st;
+    int dp[3001][3001];
+
+    //the initial approach was to check for subsq after each pick operation which gave tle
+    //the improved approach is to look for index if presetn in set either remove or keep it
+    //and subsequently check igf subsequence
+
+    int solve(string& s, string& p, int i, int j) {
+        if (j == n) {
+            return distance(st.lower_bound(i), st.end());
+        }
+        if (i == m)
+            return -1e9;
+        if (dp[i][j] != -1)
+            return dp[i][j];
+        int res = -1e9;
+        // the index i can be present or absent from set
+        // if absent check for subsequence
+        if (st.find(i) == st.end()) {
+            if (s[i] == p[j]) {
+                res = solve(s, p, i + 1, j + 1);
+            } else {
+                res = solve(s, p, i + 1, j);
+            }
+        } else {
+            int pick = 1 + solve(s, p, i + 1, j);
+            int miss = 0;
+            if (s[i] == p[j]) {
+                miss = solve(s, p, i + 1, j + 1);
+            } else {
+                miss = solve(s, p, i + 1, j);
+            }
+            res = max({res, pick, miss});
+        }
+        return dp[i][j] = res;
+    }
+
+    int maxRemovals(string source, string pattern, vector<int>& arr) {
+        m = source.size();
+        n = pattern.size();
+        for (auto i : arr)
+            st.insert(i);
+        memset(dp, -1, sizeof(dp));
+        return solve(source, pattern, 0, 0);
+    }
+};
