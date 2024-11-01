@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int solve(int x) {
+        int cnt = 0;
+        int mask = 0;
+        int tp = x;
+        while (x > 0 && ((x & 1) == 1)) {
+            x = x >> 1;
+            mask++;
+        }
+        mask -= 1;
+        return tp ^ (1 << mask);
+    }
+
+    //from lsb until first 0 encountered just change last encountered 1
+
+    vector<int> minBitwiseArray(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> ans(n, -1);
+        for (int i = 0; i < n; i++) {
+            if (nums[i] != 2) {
+                int ele = solve(nums[i]);
+                ans[i] = ele;
+            }
+        }
+        return ans;
+    }
+};
