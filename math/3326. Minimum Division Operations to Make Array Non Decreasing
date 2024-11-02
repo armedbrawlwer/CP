@@ -1,0 +1,47 @@
+//the number on division with greatest proper divisor yields smallest divisor
+
+int N = 1e6 + 10;
+vector<int> isprime(N);
+vector<int> smallestdivisor(N);
+bool done = false;
+class Solution {
+public:
+    void sieve() {
+        if (done)
+            return;
+        done = true;
+        for (int i = 0; i < N; i++) {
+            isprime[i] = 1;
+            smallestdivisor[i] = i;
+        }
+        isprime[0] = isprime[1] = 0;
+        for (int i = 2; i < N; i++) {
+            for (int j = 2 * i; j < N; j += i) {
+                isprime[j] = 0;
+                if (smallestdivisor[j] == j) {
+                    smallestdivisor[j] = i;
+                }
+            }
+        }
+    }
+
+    int minOperations(vector<int>& nums) {
+        sieve();
+        int n = nums.size();
+        int prev = nums[n - 1];
+        int res = 0;
+        for (int i = n - 2; i >= 0; i--) {
+            int curr = nums[i];
+            if (curr > prev) {
+                if (smallestdivisor[curr] != curr) {
+                    curr = smallestdivisor[curr];
+                }
+                if (curr>prev)
+                    return -1;
+                res++;
+            }
+            prev = curr;
+        }
+        return res;
+    }
+};
