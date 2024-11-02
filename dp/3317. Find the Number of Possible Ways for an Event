@@ -1,0 +1,29 @@
+class Solution {
+public:
+    int dp[1001][1001];
+    int mod = 1e9 + 7;
+
+    int solverec(int stage, int i, int n, int x, int y) {
+        if (stage > x)
+            return 0;
+        if (i == n)
+            return 1;
+        if (dp[i][stage] != -1)
+            return dp[i][stage];
+
+        // Calculating each term while managing overflow with modulo
+        long long option1 = ((x - stage) * 1LL * y) % mod;
+        option1 = (option1 * solverec(stage + 1, i + 1, n, x, y)) % mod;
+
+        long long option2 = (stage * 1LL * solverec(stage, i + 1, n, x, y)) % mod;
+
+        long long rec = (option1 + option2) % mod;
+
+        return dp[i][stage] = rec;
+    }
+
+    int numberOfWays(int n, int x, int y) {
+        memset(dp, -1, sizeof(dp));
+        return solverec(0, 0, n, x, y);
+    }
+};
