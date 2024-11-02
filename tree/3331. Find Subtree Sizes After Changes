@@ -1,0 +1,45 @@
+class Solution {
+public:
+    string str;
+    vector<int> preChar;
+
+    void dfs(int node, vector<int>& parent, vector<vector<int>>& graph) {
+        int val = preChar[str[node] - 'a'];
+        preChar[str[node] - 'a'] = node;
+        for (int ele : graph[node]) {
+            int val = preChar[str[ele] - 'a'];
+            if (val != -1) {
+                parent[ele] = val;
+            }
+            dfs(ele, parent, graph);
+        }
+        preChar[str[node] - 'a'] = val;
+    }
+
+    void dfs2(int node, vector<int>& sol, vector<vector<int>>& graph) {
+        int size = 1;
+        for (int ele : graph[node]) {
+            dfs2(ele, sol, graph);
+            size += sol[ele];
+        }
+        sol[node] = size;
+    }
+
+    vector<int> findSubtreeSizes(vector<int>& parent, string s) {
+        int n = parent.size();
+        str = s;
+        vector<vector<int>> graph(n, vector<int>());
+        for (int i = 1; i < parent.size(); i++) {
+            graph[parent[i]].push_back(i);
+        }
+        preChar = vector<int>(26, -1);
+        dfs(0, parent, graph);
+        graph = vector<vector<int>>(n, vector<int>());
+        for (int i = 1; i < parent.size(); i++) {
+            graph[parent[i]].push_back(i);
+        }
+        vector<int> sol(n, 0);
+        dfs2(0, sol, graph);
+        return sol;
+    }
+};
