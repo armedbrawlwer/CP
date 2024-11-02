@@ -1,0 +1,29 @@
+class Solution {
+public:
+    bool anyCharAtLeastK(vector<int>& freq, int k) {
+        for (int count : freq) {
+            if (count >= k)
+                return true;
+        }
+        return false;
+    }
+    int numberOfSubstrings(string s, int k) {
+        int n = s.size();
+        int result = 0;
+
+        for (int left = 0; left < n; left++) {
+            vector<int> freq(26, 0);
+
+            for (int right = left; right < n; right++) {
+                freq[s[right] - 'a']++;
+
+                if (freq[s[right]-'a']>=k) {
+                    result += n - right;
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+};
