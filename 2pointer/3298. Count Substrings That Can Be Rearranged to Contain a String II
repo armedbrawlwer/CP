@@ -1,0 +1,46 @@
+#include <unordered_map>
+#include <string>
+using namespace std;
+
+class Solution {
+public:
+    long long validSubstringCount(string word1, string word2) {
+        unordered_map<char, int> targetFreq;
+        for (char ch : word2) {
+            targetFreq[ch]++;
+        }
+        
+        int uqchar = targetFreq.size(); 
+        int sufffreq = 0; 
+        unordered_map<char, int> windowFreq; 
+        long long ans = 0;
+        int j = 0;
+        int n = word1.size();
+
+        for (int i = 0; i < n; i++) {
+            while (j < n && sufffreq < uqchar) {
+                char endChar = word1[j];
+                if (targetFreq.count(endChar)) { 
+                    windowFreq[endChar]++;
+                    if (windowFreq[endChar] == targetFreq[endChar]) {
+                        sufffreq++;
+                    }
+                }
+                j++;
+            }
+            
+            if (sufffreq == uqchar) {
+                ans += n - j + 1;
+            }
+
+            char startChar = word1[i];
+            if (targetFreq.count(startChar)) { // If character is in word2
+                if (windowFreq[startChar] == targetFreq[startChar]) {
+                    sufffreq--;
+                }
+                windowFreq[startChar]--;
+            }
+        }
+        return ans;
+    }
+};
