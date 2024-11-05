@@ -1,0 +1,48 @@
+class Solution {
+public:
+    static bool comp(vector<int>& a, vector<int>& b) {
+        if (a[0] == b[0])
+            return a[1] > b[1];
+        return a[0] < b[0];
+    }
+
+    int lis(vector<int>& a) {
+        vector<int> dp;
+        for (int i = 0; i < a.size(); i++) {
+            if (dp.empty() || a[i] > dp.back())
+                dp.push_back(a[i]);
+            else {
+                auto it = lower_bound(dp.begin(), dp.end(), a[i]);
+                *it = a[i];
+            }
+        }
+        return dp.size();
+    }
+
+    int maxPathLength(vector<vector<int>>& arr, int k) {
+        // divide the corordinates into 2 parts one strictly lesser and one
+        // strictly greater than kth coordinate and compute lis for each of them
+        int n = arr.size();
+        int cx = arr[k][0], cy = arr[k][1];
+        sort(arr.begin(), arr.end(), comp);
+        vector<int> more, less;
+        for (int i = 0; i < n; i++) {
+            int x = arr[i][0], y = arr[i][1];
+            if (x > cx && y > cy)
+                more.push_back(y);
+            if (cx > x && cy > y)
+                less.push_back(y);
+        }
+        // sort(more.begin(), more.end());
+        // sort(less.begin(), less.end());
+        return lis(more) + lis(less) + 1;
+    }
+};
+
+// // static bool comp(vector<int>& a, vector<int>& b) {
+//         if (a[0] == b[0])
+//             return a[1] > b[1];
+//         return a[0] < b[0];
+//     } \
+above used because when same x coord. y must be decreasingly arranged to not form subsequence for same x\
+example->(0,3)(6,10),(6,8)(8,8)
