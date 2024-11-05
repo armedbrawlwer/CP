@@ -1,0 +1,30 @@
+class Solution {
+public:
+    bool isposs(vector<int>& a, long long  mid, int n, int k) {
+        long long s = 0;
+        for (int i = 0; i < n; i++) {
+            s += (-1 + sqrt(1 + 8 * (mid / a[i]))) / 2;
+        }
+        return s >= k;
+    }
+
+    //similar to painters partitino problem
+    //for each value check if mountain height can be made less than 0
+
+    long long minNumberOfSeconds(int k, vector<int>& arr) {
+        int n = arr.size();
+        long long ans = 0;
+        // minimum of maximum time is needed to reduce the mountain length
+        long long lo = 0, hi = 1e18;
+        while (lo <= hi) {
+            long long mid = (lo + hi) / 2;
+            if (isposs(arr, mid, n, k)) {
+                ans = mid;
+                hi = mid - 1;
+            } else {
+                lo = mid + 1;
+            }
+        }
+        return ans;
+    }
+};
