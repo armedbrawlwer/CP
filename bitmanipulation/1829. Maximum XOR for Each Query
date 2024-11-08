@@ -1,0 +1,31 @@
+#include <vector>
+#include <cmath>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> getMaximumXor(vector<int>& nums, int k) {
+        int n = nums.size();
+        vector<int> ans(n);
+
+        //instead of traversing for each bit just do xor with max value and it will give the ans
+
+
+        // Compute the cumulative XOR of the entire array in reverse
+        int cumulativeXOR = 0;
+        for (int i = 0; i < n; i++) {
+            cumulativeXOR ^= nums[i];
+        }
+        
+        // The maximum value in range 0 to (2^k) - 1
+        int maxKVal = (1 << k) - 1;
+
+        // Fill ans by calculating the desired maximum XOR for each prefix
+        for (int i = 0; i < n; i++) {
+            ans[i] = cumulativeXOR ^ maxKVal;
+            cumulativeXOR ^= nums[n - i - 1];
+        }
+        
+        return ans;
+    }
+};
