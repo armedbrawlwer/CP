@@ -1,0 +1,61 @@
+#include <vector>
+#include <unordered_map>
+#include <unordered_set>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+    int K;
+    unordered_map<string, bool> memo;
+
+    // Helper to get all possible OR values for a subsequence of size `remaining`
+    // starting from index `start`
+    void allPossibleORs(vector<int>& nums, int start, int remaining, int currOR, unordered_set<int>& result) {
+        // Base case: If no elements left to pick, add current OR result
+        if (remaining == 0) {
+            result.insert(currOR);
+            return;
+        }
+
+        // Base case: If out of bounds, return
+        if (start >= nums.size()) return;
+
+        // Memoization key
+        string key = to_string(start) + "#" + to_string(remaining) + "#" + to_string(currOR);
+        if (memo.find(key) != memo.end()) return;  // Check memo before continuing
+
+        // Option 1: Skip the current element
+        allPossibleORs(nums, start + 1, remaining, currOR, result);
+
+        // Option 2: Include the current element in OR calculation
+        allPossibleORs(nums, start + 1, remaining - 1, currOR | nums[start], result);
+
+        // Memoize
+        memo[key] = true;
+    }
+
+public:
+    int maxValue(vector<int>& nums, int k) {
+        int n = nums.size();
+        K = k;
+
+        // Generate possible OR values for the left side up to index `n - k`
+        unordered_set<int> leftResults;
+        allPossibleORs(nums, 0, k, 0, leftResults);
+
+        // Generate possible OR values for the right side starting from index `k`
+        unordered_set<int> rightResults;
+        reverse(nums.begin(),nums.end());
+        allPossibleORs(nums, 0, k, 0, rightResults);
+
+        // Calculate the maximum XOR of OR values between left and right
+        int res = 0;
+        for (int a : leftResults) {
+            for (int b : rightResults) {
+                res = max(res, a ^ b);
+            }
+        }
+
+        return res;
+    }
+};
