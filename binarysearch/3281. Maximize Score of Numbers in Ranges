@@ -1,0 +1,35 @@
+class Solution {
+public:
+    bool isposs(vector<int>& start, int d, long long mid) {
+        int prev = start[0];
+        int n =start.size();
+        for (int i = 1; i < n; i++) {
+            int min = prev + mid;
+            if (min > start[i] + d)
+                return false;
+            prev = max(start[i], min);
+        }
+        return true;
+    }
+
+    int maxPossibleScore(vector<int>& start, int d) {
+        // minimum of maximum is needed->binary search
+        // binary search for n intervals need to be placed
+        //iterate for all possible diffreneces
+        
+        int n = start.size();
+        sort(start.begin(), start.end());
+        long long lo = 0, hi = INT_MAX;
+        int ans = 0;
+        while (lo <= hi) {
+            long long mid = (lo + hi) / 2;
+            if (isposs(start, d, mid)) {
+                ans = mid;
+                lo = mid + 1;
+            } else {
+                hi = mid - 1;
+            }
+        }
+        return ans;
+    }
+};
