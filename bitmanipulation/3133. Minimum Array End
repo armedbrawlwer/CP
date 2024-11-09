@@ -1,27 +1,11 @@
-typedef long long ll;
 class Solution {
 public:
     long long minEnd(int n, int x) {
-        n-=1;
-        vector<int> xbit(64,0),nbit(64,0);
-        for(int i=0;i<32;i++){
-            xbit[i]=(x>>i) & 1;
-            nbit[i]=(n>>i) & 1;
-        }
-        int i=0,j=0;
-        while(i<64){
-            if(xbit[i]==1){
-                i+=1;
-                continue;
-            }
-            xbit[i]=nbit[j];
-            i+=1;
-            j+=1;
-
-        }
-        ll ans=0;
-        for(int i=0;i<64;i++){
-            ans+=xbit[i]*(1ll<<i);
+        long long ans = x;
+        //have t0o set lsb to 1\
+        do or operation with x to get answer
+        for (int i = 1; i < n; i++) {
+            ans = (ans + 1) | x;
         }
         return ans;
     }
