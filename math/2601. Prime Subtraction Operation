@@ -1,0 +1,46 @@
+class Solution {
+public:
+    bool done = false;
+    int N = 2000;
+    vector<bool> isprime;
+    vector<int> primes; // To store all primes up to N for easy access
+
+    // Sieve of Eratosthenes to generate primes up to N
+    void sieve() {
+        if (done)
+            return;
+        done = true;
+        isprime.resize(N, true);
+        isprime[0] = false;
+        isprime[1] = false;
+        for (int i = 2; i < N; i++) {
+            if (isprime[i]) {
+                primes.push_back(i);
+                for (int j = i * 2; j < N; j += i) {
+                    isprime[j] = false;
+                }
+            }
+        }
+    }
+
+    bool primeSubOperation(vector<int>& nums) {
+        int n = nums.size();
+        sieve();
+        // subsituting curr in place of nums[i]
+        int i = 0, curr = 1;
+        while (i < n) {
+            int diff = nums[i] - curr;
+            if (diff < 0)
+                return false;
+
+            if (isprime[diff] || diff == 0) {
+                curr++;
+                i++;
+            } else {
+                curr++;
+            }
+        }
+
+        return true;
+    }
+};
