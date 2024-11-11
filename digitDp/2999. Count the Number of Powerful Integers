@@ -1,0 +1,49 @@
+class Solution {
+public:
+long long dp[17][2];
+
+    long long solverec(int idx, int tight, int limit, string& s, string& end,
+                       int n) {
+        if (idx == n) {
+            return 1LL;
+        }
+        if(dp[idx][tight]!=-1)return dp[idx][tight];
+        int lb = 0;
+        int ub = tight == 1 ? min(limit, end[idx] - '0') : limit;
+        // check if current index forms part of suffix
+        int suff_st_ind = n - s.size();
+        if (idx >= suff_st_ind) {
+            lb = s[idx - suff_st_ind] - '0';
+            ub = min(ub, s[idx - suff_st_ind] - '0');
+        }
+        long long ans = 0;
+        for (int i = lb; i <= ub; i++) {
+            ans += solverec(idx + 1, tight & (i == end[idx] - '0'), limit, s,
+                            end, n);
+        }
+        return dp[idx][tight]= ans;
+    }
+
+    long long numberOfPowerfulInt(long long start, long long finish, int limit,
+                                  string s) {
+        // approach is to tackle using digit dp
+        // important concept for tight where we check if our current number
+        string st = to_string(start - 1);
+        string end = to_string(finish);
+        int m = st.size();
+        int n = end.size();
+        int p = s.size();
+        memset(dp,-1,sizeof(dp));
+        if (s.size() > end.size())
+            return 0LL;
+        long long a = 0, b = 0;
+        if (p <= n) {
+            a = solverec(0, 1, limit, s, end, n);
+        }
+        memset(dp,-1,sizeof(dp));
+        if (p <= m) {
+            b = solverec(0, 1, limit, s, st, m);
+        }
+        return a - b;
+    }
+};
