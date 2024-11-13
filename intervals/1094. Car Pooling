@@ -1,0 +1,22 @@
+class Solution {
+public:
+    bool carPooling(vector<vector<int>>& trips, int capacity) {
+        //gives wrong answer when aaproached with classic interval removal
+        //use array and counter to keep tracks of passengers
+        //good concept of arrays and counter
+        vector<vector<int>>v;
+        int n  = trips.size();
+        for(int i=0;i<n;i++){
+            v.push_back({trips[i][1],1,trips[i][0]});
+            v.push_back({trips[i][2],-1,trips[i][0]});
+        }
+        sort(v.begin(),v.end());
+        int ctr=0;
+        for(int i=0;i<v.size();i++){
+            ctr+=v[i][1]==1?v[i][2]:-v[i][2];
+            if(ctr>capacity)return false;
+        }
+        return true;
+
+    }
+};
