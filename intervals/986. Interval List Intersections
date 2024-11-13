@@ -1,0 +1,22 @@
+class Solution {
+public:
+    vector<vector<int>> intervalIntersection(vector<vector<int>>& fir,
+                                             vector<vector<int>>& sec) {
+        int i = 0, j = 0;
+        int n = fir.size();
+        int m = sec.size();
+        vector<vector<int>> ans;
+        while (i < n && j < m) {
+            int x = max(fir[i][0], sec[j][0]);
+            int y = min(fir[i][1], sec[j][1]);
+            if (x <= y) {
+                ans.push_back({x, y});
+            }
+            if (fir[i][1] >= sec[j][1]) {
+                j++;
+            } else
+                i++;
+        }
+        return ans;
+    }
+};
