@@ -1,0 +1,40 @@
+class Solution {
+public:
+    bool isposs(vector<int> arr, int mid, int n) {
+        int stores = 0;
+        int i = 0;
+        int size = arr.size();
+        // int curr_item = arr[0];
+        while (i < arr.size()) {
+            // the store will get min(mid,arr[i]-mid)
+            int curr_item = arr[i];
+            int taken = min(mid, curr_item);
+            arr[i] -= taken;
+            if (curr_item - taken == 0) {
+                i++;
+            }
+            stores++;
+            if (stores > n)
+                return false;
+        }
+        return (stores <= n);
+    }
+
+    int minimizedMaximum(int n, vector<int>& arr) {
+        int m = arr.size();
+        // since minimum of maximum is needed whe have to apply binary search
+        int lo = 0, hi = *max_element(arr.begin(), arr.end());
+        sort(arr.begin(), arr.end());
+        int ans = 0;
+        while (lo <= hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (isposs(arr, mid, n)) {
+                ans = mid;
+                hi = mid - 1;
+            } else {
+                lo = mid + 1;
+            }
+        }
+        return ans;
+    }
+};
