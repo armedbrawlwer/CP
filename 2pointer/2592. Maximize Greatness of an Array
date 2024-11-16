@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int maximizeGreatness(vector<int>& nums) {
+        sort(nums.begin(), nums.end()); // Step 1: Sort the array
+        
+        int i = 0; // Pointer for the smaller elements
+        int j = 0; // Pointer for the larger elements
+        int n = nums.size();
+        int count = 0;
+
+        // Step 2: Two-pointer approach
+        while (i < n && j < n) {
+            if (nums[j] > nums[i]) { // Find a larger element for nums[i]
+                count++;
+                i++; // Move both pointers
+                j++;
+            } else {
+                j++; // Move only the larger pointer
+            }
+        }
+
+        return count;
+    }
+};
