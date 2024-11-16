@@ -1,0 +1,32 @@
+class Solution {
+public:
+    int maxFrequency(vector<int>& nums, int k, int numOperations) {
+        int n = nums.size();
+        vector<vector<int>> events;
+        unordered_map<int, int> mp;
+        // 1->for interval start  2->for nums present in interval  3->for
+        // interval end
+        for (auto& num : nums) {
+            mp[num]++;
+            events.push_back({num - k, 1});
+            events.push_back({num, 2});
+            events.push_back({num + k, 3});
+        }
+        int res = 0;
+        sort(events.begin(), events.end());
+        int cnt = 0;
+        for (auto vec : events) {
+            int num = vec[0], type = vec[1];
+            if (type == 1) {
+                cnt++;
+            } else if (type == 3) {
+                cnt--;
+            }
+
+            // numbers in interval + min(numbers that are already in
+            // interval,numop)
+            res = max(res, mp[num] + min(cnt - mp[num], numOperations));
+        }
+        return res;
+    }
+};
