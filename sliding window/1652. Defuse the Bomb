@@ -1,0 +1,28 @@
+class Solution {
+public:
+    vector<int> decrypt(vector<int>& code, int k) {
+        int n = code.size();
+        vector<int> ans(n,0);
+        if(k==0)return ans;
+        int beg,last;
+        if(k>0){
+            beg=1;
+            last = k; 
+        }else{
+            beg=n-abs(k);
+            last = n-1;
+        }
+        int winsum =0;
+        for(int i=beg;i<=last;i++){
+            winsum+=code[i];
+        }
+        for(int i=0;i<n;i++){
+            ans[i]=winsum;
+            winsum-=code[beg%n];
+            beg++;
+            winsum+=code[(last+1)%n];
+            last++;
+        }
+        return ans;
+    }
+};
