@@ -1,0 +1,45 @@
+#include <vector>
+#include <deque>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    int minimumObstacles(vector<vector<int>>& grid) {
+        int m = grid.size();
+        int n = grid[0].size();
+        vector<vector<int>> dist(m, vector<int>(n, 1e6)); // Initialize distances to a large value
+        deque<pair<int, int>> dq;
+        
+        // Start from the top-left corner
+        dist[0][0] = 0;
+        dq.push_front({0, 0});
+        
+        int dr[4] = {-1, 1, 0, 0};
+        int dc[4] = {0, 0, -1, 1};
+        
+        while (!dq.empty()) {
+            auto [r, c] = dq.front();
+            dq.pop_front();
+            
+            for (int k = 0; k < 4; ++k) {
+                int nr = r + dr[k];
+                int nc = c + dc[k];
+                
+                if (nr >= 0 && nr < m && nc >= 0 && nc < n) {
+                    int newDist = dist[r][c] + grid[nr][nc];
+                    if (newDist < dist[nr][nc]) {
+                        dist[nr][nc] = newDist;
+                        if (grid[nr][nc] == 0) {
+                            dq.push_front({nr, nc}); // Prioritize free cells
+                        } else {
+                            dq.push_back({nr, nc}); // Defer obstacle cells
+                        }
+                    }
+                }
+            }
+        }
+        
+        return dist[m-1][n-1];
+    }
+};
