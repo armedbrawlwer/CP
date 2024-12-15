@@ -1,0 +1,35 @@
+class Solution {
+public:
+    bool isodd(int e) { return e % 2 != 0; }
+    vector<bool> isArraySpecial(vector<int>& nums,
+                                vector<vector<int>>& queries) {
+        int n = nums.size();
+        // if(n==1)return {true};
+        vector<int> v(n), pre(n);
+        v[0] = 1;
+        pre[0] = 1;
+        for (int i = 1; i < n; i++) {
+            if ((isodd(nums[i]) && !isodd(nums[i - 1])) ||
+                (isodd(nums[i - 1]) && !isodd(nums[i]))) {
+                v[i] = 1;
+                pre[i] = 1 + pre[i - 1];
+            } else {
+                v[i]=0;
+                pre[i] = pre[i - 1];
+            }
+        }
+        vector<bool> ans;
+        for (auto q : queries) {
+            int start = q[0]; // Assuming queries are 0-based
+            int end = q[1];
+            int ctr = pre[end] - (start > 0 ? pre[start - 1] : 0);
+            int len = end - q[0] + 1;
+            if (ctr == len || (ctr + 1 == len && v[q[0]] == 0)) {
+                ans.push_back(true);
+            } else {
+                ans.push_back(false);
+            }
+        }
+        return ans;
+    }
+};
