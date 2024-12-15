@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int maximumBeauty(vector<int>& nums, int k) {
+        // find maximum overlapping pairs
+        int n = nums.size();
+        // can be found using dequeue
+        deque<pair<int, int>> dq;
+        vector<pair<int, int>> v;
+        for (auto num : nums) {
+            v.push_back({num - k, num + k});
+        }
+        sort(v.begin(), v.end());
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            while (!dq.empty() && dq.front().second < v[i].first) {
+                dq.pop_front();
+            }
+            dq.push_back(v[i]);
+            int curr=dq.size();
+            ans = max(ans, curr);
+        }
+        return ans;
+    }
+};
