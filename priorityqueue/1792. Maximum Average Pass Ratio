@@ -1,0 +1,48 @@
+class Solution {
+public:
+    double maxAverageRatio(vector<vector<int>>& classes, int k) {
+        // Priority queue to maximize marginal gain
+        auto marginal_gain = [](int pass, int tot) {
+            return ((double)(pass + 1) / (tot + 1)) - ((double)pass / tot);
+        };
+        
+        priority_queue<pair<double, pair<int, int>>> pq;
+        
+        // Initialize the priority queue with the marginal gain for all classes
+        for (auto& c : classes) {
+            int pass = c[0], tot = c[1];
+            pq.push({marginal_gain(pass, tot), {pass, tot}});
+        }
+        
+        // Distribute k additional students
+        while (k--) {
+            auto top = pq.top();
+            pq.pop();
+            
+            double gain = top.first;
+            int pass = top.second.first;
+            int tot = top.second.second;
+            
+            // Update the class by adding one more student
+            pass++;
+            tot++;
+            
+            // Recompute marginal gain and push back into the heap
+            pq.push({marginal_gain(pass, tot), {pass, tot}});
+        }
+        
+        // Calculate the final average pass ratio
+        double total_avg = 0.0;
+        while (!pq.empty()) {
+            auto top = pq.top();
+            pq.pop();
+            
+            int pass = top.second.first;
+            int tot = top.second.second;
+            
+            total_avg += (double)pass / tot;
+        }
+        
+        return total_avg / classes.size();
+    }
+};
