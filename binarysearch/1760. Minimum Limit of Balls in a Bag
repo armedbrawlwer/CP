@@ -1,0 +1,38 @@
+class Solution {
+public:
+
+    bool isposs(vector<int> &nums, int k,int n,int limit){
+       int op = 0;
+        for (int num : nums) {
+            if (num > limit) {
+                // Calculate how many splits are needed
+                op += (num - 1) / limit; // Equivalent to ceil(num / limit) - 1
+                if (op > k) return false;
+            }
+        }
+        return op <= k;
+
+    }
+
+    int minimumSize(vector<int>& nums, int k) {
+        int n = nums.size();
+        int ans = 0;
+        // minimum of maximum is needed
+        // aplly binary search
+        //  or apply a priority queue
+        // always divide the largest bag
+        priority_queue<int> pq({nums.begin(),nums.end()});
+        int lo=1,hi=*max_element(nums.begin(),nums.end());
+        while(lo<=hi){
+            int mid=(lo+hi)/2;
+            if(isposs(nums,k,n,mid)){
+                ans=mid;
+                hi=mid-1;
+            } else {
+                lo=mid+1;
+            }
+        }
+        return ans;
+        
+    }
+};
