@@ -1,0 +1,35 @@
+class Solution {
+public:
+    int k, n;
+    int dp[101][101][101];
+    // ceil(a/b) = (a+b-1)/)b;
+
+
+    int solverec(vector<int>& nums, int op1, int op2, int i) {
+        if(op1<0 || op2<0)return 1e7+1;
+        if (i == n)
+            return 0;
+        if(dp[i][op1][op2]!=-1)return dp[i][op1][op2];
+        int w1 = solverec(nums, op1, op2, i + 1) + nums[i];
+        int w2 = solverec(nums, op1 - 1, op2, i + 1) + (nums[i] + 1) / 2;
+        int w3 = nums[i] >= k
+                     ? solverec(nums, op1, op2 - 1, i + 1) + (nums[i] - k)
+                     : INT_MAX;
+        int w4 = (nums[i] + 1) / 2 >= k
+                     ? solverec(nums, op1 - 1, op2 - 1, i + 1) +
+                           ((nums[i] + 1) / 2) - k
+                     : INT_MAX;
+        int w5 = nums[i] >= k
+                     ? solverec(nums, op1-1, op2 - 1, i + 1) + (nums[i] - k+1)/2
+                     : INT_MAX;
+        
+        return dp[i][op1][op2] = min({w1,w2,w3,w4,w5});
+    }
+
+    int minArraySum(vector<int>& nums, int K, int op1, int op2) {
+        n = nums.size();
+        k = K;
+        memset(dp,-1,sizeof(dp));
+        return solverec(nums, op1, op2, 0);
+    }
+};
