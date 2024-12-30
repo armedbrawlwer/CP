@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int sumOfGoodSubsequences(vector<int>& nums) {
+        int maxi = 1e5 + 1;
+        int mod = 1e9 + 7;
+        vector<long> dp(maxi), sum(maxi, 0);
+        for (auto num : nums) {
+            dp[num] = (dp[num] + 1) % mod;
+            sum[num] = (sum[num] + num) % mod;
+            if (num - 1 >= 0 && dp[num - 1] > 0) {
+                dp[num] = (dp[num] + dp[num - 1]) % mod;
+                sum[num] =
+                    (sum[num] + sum[num - 1] + (dp[num - 1] * num) % mod) % mod;
+            }
+            if (num + 1 < maxi && dp[num + 1] > 0) {
+                dp[num] = (dp[num] + dp[num + 1]) % mod;
+                sum[num] =
+                    (sum[num] + sum[num + 1] + (dp[num + 1] * num) % mod) % mod;
+            }
+        }
+        int ans = 0;
+        for (auto s : sum) {
+            ans = (ans + s) % mod;
+        }
+        return ans;
+    }
+};
