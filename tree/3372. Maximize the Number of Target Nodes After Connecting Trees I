@@ -1,0 +1,44 @@
+class Solution {
+public:
+    int dfs(unordered_map<int, list<int>>& tr, int node, int k, int par) {
+        if (k < 0)
+            return 0;
+        int dist = 1;
+        for (auto nei : tr[node]) {
+            if (nei == par)
+                continue;
+            dist += dfs(tr, nei, k - 1, node);
+        }
+        return dist;
+    }
+
+    vector<int> maxTargetNodes(vector<vector<int>>& arr1,
+                               vector<vector<int>>& arr2, int k) {
+        int n = arr1.size() + 1;
+        int m = arr2.size() + 1;
+        vector<int> ans(n);
+
+        unordered_map<int, list<int>> tr1, tr2;
+        for (auto i : arr1) {
+            int u = i[0];
+            int v = i[1];
+            tr1[u].push_back(v);
+            tr1[v].push_back(u);
+        }
+        for (auto i : arr2) {
+            int u = i[0];
+            int v = i[1];
+            tr2[u].push_back(v);
+            tr2[v].push_back(u);
+        }
+
+        int maxtar2 = 0;
+        for (int i = 0; i < m; i++) {
+            maxtar2 = max(maxtar2, dfs(tr2, i, k-1 , -1));
+        }
+        for (int i = 0; i < n; i++) {
+            ans[i] = dfs(tr1, i, k , -1) + maxtar2;
+        }
+        return ans;
+    }
+};
