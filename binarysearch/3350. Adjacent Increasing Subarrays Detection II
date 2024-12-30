@@ -1,0 +1,40 @@
+class Solution {
+public:
+    bool isposs(vector<int> v, int n, int mid) {
+        for (int i = 0; i <= n - 2 * mid; i++) {
+            int st1 = i, ed1 = i + mid - 1;
+            int st2 = i + mid, ed2 = st2 + mid - 1;
+            bool t1 = false, t2 = false;
+            if (v[ed1] == v[st1] + mid - 1)
+                t1 = true;
+            if (v[ed2] == v[st2] + mid - 1)
+                t2 = true;
+
+            if (t1 == true && t2 == true)
+                return true;
+        }
+        return false;
+    }
+
+    int maxIncreasingSubarrays(vector<int>& nums) {
+        int n = nums.size();
+        // range of kis from 1 to n/2
+        int lo = 2, hi = n / 2;
+        int ans = 1;
+        vector<int> v(n, 1);
+        for (int i = 1; i < n; i++) {
+            if (nums[i] > nums[i - 1])
+                v[i] = 1 + v[i - 1];
+        }
+        while (lo <= hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (isposs(v, n, mid)) {
+                ans = mid;
+                lo = mid + 1;
+            } else {
+                hi = mid - 1;
+            }
+        }
+        return ans;
+    }
+};
