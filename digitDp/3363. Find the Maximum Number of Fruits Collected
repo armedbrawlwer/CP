@@ -1,0 +1,44 @@
+class Solution {
+public:
+int dp[1001][1001];
+int n;
+
+
+    int tr(vector<vector<int>>& fruits,int r,int c)
+    {
+        if(r<0 || c<0 || r>=n || c>=n)return -1e9;
+        if(r==n-1 && c==n-1)return 0;
+        if(dp[r][c]!=-1)return dp[r][c];
+        int w2 = fruits[r][c]+tr(fruits,r+1,c);
+        int w1 = fruits[r][c]+tr(fruits,r+1,c+1);
+        int w3 = fruits[r][c]+tr(fruits,r+1,c-1);
+        return dp[r][c] = max({w1,w2,w3});
+    }
+
+    int bl(vector<vector<int>>& fruits,int r,int c)
+    {
+        if(r<0 || c<0 || r>=n || c>=n)return -1e9;
+        if(r==n-1 && c==n-1)return 0;
+        if(dp[r][c]!=-1)return dp[r][c];
+        int w1 = fruits[r][c]+bl(fruits,r+1,c+1);
+        int w2 = fruits[r][c]+bl(fruits,r-1,c+1);
+        int w3 = fruits[r][c]+bl(fruits,r,c+1);
+        return dp[r][c] = max({w1,w2,w3});
+    }
+
+    int maxCollectedFruits(vector<vector<int>>& fruits) {
+        n = fruits.size();
+        int ans=0;
+        //the player at 0,0 will move only diagonally to complete n-1 moves
+        for(int i=0;i<n;i++){
+            ans+=fruits[i][i];
+            fruits[i][i]=0;
+        }
+        //for the rest 2 players we run separeate dp
+        memset(dp,-1,sizeof(dp));
+        ans+=tr(fruits,0,n-1);
+        memset(dp,-1,sizeof(dp));
+        ans+=bl(fruits,n-1,0);
+        return ans;
+    }
+};
