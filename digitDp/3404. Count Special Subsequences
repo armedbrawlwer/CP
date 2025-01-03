@@ -1,0 +1,29 @@
+class Solution {
+public:
+    long long numberOfSubsequences(vector<int>& nums) {
+        int n = nums.size();
+        long long ans = 0;
+        unordered_map<string, int> mp;
+        for (int r = 4; r < n - 2; r++) {
+            int q = r - 2;
+            // traversing p
+            for (int p = 0; p <= q - 2; p++) {
+                int div = gcd(nums[p], nums[q]);
+                int num = nums[p] / div;
+                int den = nums[q] / div;
+                string key = to_string(num) + "-" + to_string(den);
+                mp[key] += 1;
+            }
+
+            // traversing s
+            for (int s = r + 2; s < n; s++) {
+                int div = gcd(nums[s], nums[r]);
+                int num = nums[s] / div;
+                int den = nums[r] / div;
+                string key = to_string(num) + "-" + to_string(den);
+                ans += mp[key];
+            }
+        }
+        return ans;
+    }
+};
