@@ -1,0 +1,33 @@
+class Solution {
+public:
+    int countNonOverlapping(vector<vector<int>>& intervals) {
+        if (intervals.size() <= 1) return intervals.size();
+        sort(intervals.begin(), intervals.end());
+        int count = 1; // Start with the first interval
+        int end = intervals[0][1]; // Track the end of the last non-overlapping interval
+
+        for (int i = 1; i < intervals.size(); ++i) {
+            if (intervals[i][0] >= end) {
+                // No overlap, increment the count
+                count++;
+                end = intervals[i][1];
+            } else {
+                // Overlap, update the end to the max of overlapping intervals
+                end = max(end, intervals[i][1]);
+            }
+        }
+
+        return count;
+    }
+
+    bool checkValidCuts(int n, vector<vector<int>>& rectangles) {
+        vector<vector<int>> vertical, horizontal;
+        for (auto& rect : rectangles) {
+            vertical.push_back({rect[1], rect[3]});     // Vertical projection
+            horizontal.push_back({rect[0], rect[2]});  // Horizontal projection
+        }
+
+        // Count non-overlapping intervals for both projections
+        return countNonOverlapping(horizontal) >= 3 || countNonOverlapping(vertical) >= 3;
+    }
+};
