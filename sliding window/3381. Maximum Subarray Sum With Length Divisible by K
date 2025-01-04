@@ -1,0 +1,23 @@
+class Solution {
+public:
+    long long maxSubarraySum(vector<int>& nums, int k) {
+        // since we have to subtracht the sum to get window sum
+        //  for every index%k store the minimum sum
+        unordered_map<int, long long> mp;
+        long long ans = LONG_MIN;
+        long long s = 0;
+        int n = nums.size();
+        mp[0]=0;
+        for (int i = 0; i < n; i++) {
+            int key = (i+1) % k;
+            s += nums[i];
+            if (mp.find(key) == mp.end())
+                mp[key] = s;
+            else {
+                ans = max(ans, s - mp[key]);
+                mp[key] = min(mp[key], s);
+            }
+        }
+        return ans;
+    }
+};
