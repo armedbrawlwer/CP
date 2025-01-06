@@ -1,0 +1,27 @@
+class Solution {
+public:
+    vector<int> minOperations(string boxes) {
+        int n = boxes.size();
+        vector<int> ans(n,0);
+        //number of moves is ball + moves
+        vector<int> pre(n,0),suff(n,0);
+        //computing prefix
+        int balls = boxes[0]=='1'?1:0;
+        for(int i=1;i<n;i++){
+            int moves = pre[i-1];
+            pre[i]=moves+balls;
+            balls+=(boxes[i]=='1'?1:0);
+        }
+        balls = boxes[n-1]=='1'?1:0;
+        //computing suffix
+        for(int i=n-2;i>=0;i--){
+            int moves=suff[i+1];
+            suff[i]=moves+balls;
+            balls+=(boxes[i]=='1'?1:0);
+        }
+        for(int i=0;i<n;i++){
+            ans[i]=pre[i]+suff[i];
+        }
+        return ans;
+    }
+};
