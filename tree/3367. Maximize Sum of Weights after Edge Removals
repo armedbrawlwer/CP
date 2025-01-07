@@ -1,0 +1,52 @@
+class Solution {
+public:
+    unordered_map<int, list<pair<int, int>>> adj;
+    map<long long, map<long long, map<int, long long>>> dp;
+
+    long long solverec(int node, bool is_parent_removed, int par, int k) {
+        if (dp.find(node) != dp.end() && dp[node].find(par) != dp[node].end() &&
+            dp[node][par].find(is_parent_removed) != dp[node][par].end()) {
+            return dp[node][par][is_parent_removed];
+        }
+        long long answer = 0;
+        vector<pair<long long, long long>> vec;
+        int size = adj[node].size();
+        int edges_to_be_removed = max(0, size - k - is_parent_removed);
+        for (auto p : adj[node]) {
+            int nei = p.first, wt = p.second;
+            if (nei == par)
+                continue;
+            long long nr = solverec(nei, 0, node, k) + wt;
+            long long r = solverec(nei, 1, node, k);
+            vec.push_back({nr, r});
+        }
+        sort(vec.begin(), vec.end(),
+             [](const pair<long long, long long>& p1,
+                const pair<long long, long long>& p2) {
+                 return p1.first - p1.second < p2.first - p2.second;
+             });
+        // remove the first edges_to_be_removed
+        for (int i = 0; i < vec.size(); i++) {
+            if (i < edges_to_be_removed) {
+                answer += vec[i].second;
+            } else {
+                answer += max(vec[i].first, vec[i].second);
+            }
+        }
+        return dp[node][par][is_parent_removed] = answer;
+    }
+
+    long long maximizeSumOfWeights(vector<vector<int>>& edges, int k) {
+        int n = edges.size();
+
+        for (auto vec : edges) {
+            int u = vec[0];
+            int v = vec[1];
+            int w = vec[2];
+            adj[u].push_back({v, w});
+            adj[v].push_back({u, w});
+        }
+        // dp on trees
+        return solverec(0, 0, -1, k);
+    }
+};
