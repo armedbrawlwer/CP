@@ -1,0 +1,45 @@
+class Solution {
+public:
+    vector<vector<int>> make_graph(vector<vector<int>> edges) {
+        int n = edges.size();
+        vector<vector<int>> res(n + 1);
+        for (auto vec : edges) {
+            int u = vec[0], v = vec[1];
+            res[u].push_back(v);
+            res[v].push_back(u);
+        }
+        return res;
+    }
+
+    void find_farthest(int node,int par,int dist,vector<vector<int>> &v,pair<int, int> &res){
+        if(dist>res.first){
+            res.first=dist;
+            res.second=node;
+        }
+        for(auto nei:v[node]){
+            if(nei==par)continue;
+            find_farthest(nei,node,dist+1,v,res);
+        }
+        return;
+    }
+
+    int minimumDiameterAfterMerge(vector<vector<int>>& edges1,
+                                  vector<vector<int>>& edges2) {
+        vector<vector<int>> g1 = make_graph(edges1), g2 = make_graph(edges2);
+        // for finding diameter,go tp random node and find first extreme node
+        // from it then from that node,find the extreme most node from it that
+        // will be the diameter
+        pair<int, int> res1 = {INT_MIN, -1}, res2 = {INT_MIN, -1};
+        // start dfs from any random node
+        find_farthest(0, -1,  0, g1, res1);
+        find_farthest(res1.second, -1,  0, g1, res2);
+        int d1 = res2.first;
+
+        res1 = {INT_MIN, -1}, res2 = {INT_MIN, -1};
+        find_farthest(0, -1, 0, g2, res1);
+        find_farthest(res1.second, -1 , 0, g2, res2);
+        int d2 = res2.first;
+
+        return max({d1,d2,((d1+1)/2 + (d2+1)/2 + 1)});
+    }
+};
