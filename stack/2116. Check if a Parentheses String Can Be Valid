@@ -1,0 +1,48 @@
+class Solution {
+public:
+    bool canBeValid(string s, string locked) {
+        int n = s.size();
+        // If the length of the string is odd, it can never be valid
+        if (n % 2 != 0) return false;
+
+        // First pass: left to right
+        int open = 0, free = 0; // Count of '(' and free (unlocked) characters
+        for (int i = 0; i < n; i++) {
+            if (locked[i] == '0') {
+                free++; // Free character can be '(' or ')'
+            } else if (s[i] == '(') {
+                open++; // Locked '('
+            } else { // s[i] == ')'
+                if (open > 0) {
+                    open--; // Match with a locked '('
+                } else if (free > 0) {
+                    free--; // Use a free character to match
+                } else {
+                    return false; // Unmatched ')'
+                }
+            }
+        }
+
+        // Second pass: right to left
+        int close = 0; 
+        free = 0; // Reset free counter
+        for (int i = n - 1; i >= 0; i--) {
+            if (locked[i] == '0') {
+                free++; // Free character can be '(' or ')'
+            } else if (s[i] == ')') {
+                close++; // Locked ')'
+            } else { // s[i] == '('
+                if (close > 0) {
+                    close--; // Match with a locked ')'
+                } else if (free > 0) {
+                    free--; // Use a free character to match
+                } else {
+                    return false; // Unmatched '('
+                }
+            }
+        }
+
+        // If we pass both checks, the string can be valid
+        return true;
+    }
+};
