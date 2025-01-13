@@ -1,0 +1,45 @@
+class Solution {
+public:
+    bool isPointInsideRect(auto i,auto j,auto k){
+        int x1 = i.first;
+        int y1 = i.second;
+        
+        if(x1>=j.first and x1<=k.first and y1>=k.second and y1<=j.second)
+            return true;
+        
+        return false;
+    }
+    int numberOfPairs(vector<vector<int>>& points) {
+        
+        int ptr = 0;
+        vector<pair<int,int>>temp;
+        vector<pair<pair<int,int>,pair<int,int>>>toCheck;
+        
+        for(auto i:points){
+                temp.push_back({i[0],i[1]});
+        }
+        
+        for(int i=0;i<points.size();i++){
+            for(int j=0;j<points.size();j++){
+                if(i!=j){
+                    if(temp[j].first>=temp[i].first and temp[j].second<=temp[i].second){
+                        toCheck.push_back({temp[i],temp[j]});
+                    }
+                }
+            }
+        }
+        
+        for(auto itr:toCheck){
+            bool res = true;
+            for(int i=0;i<points.size();i++){
+                if(itr.first!=temp[i] and itr.second!=temp[i] and isPointInsideRect(temp[i],itr.first,itr.second)){
+                    res = false;
+                    break;
+                }
+            }
+            if(res) ptr++;
+        }
+        
+        return ptr;
+    }
+};
