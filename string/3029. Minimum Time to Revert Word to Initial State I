@@ -1,0 +1,34 @@
+class Solution {
+public:
+
+    void solve(vector<int> &lps,string word){
+        int n = word.size();
+        int len=0;
+        int i=1;
+        while(i<n){
+            if(word[i]==word[len]){
+                len+=1;
+                lps[i]=len;
+                i++;
+            }else {
+                if(len!=0){
+                    len = lps[len-1];
+                }else {
+                    lps[i]=0;
+                    i++;
+                }
+            }
+        }
+    }
+
+    int minimumTimeToInitialState(string word, int k) {
+        int n = word.size();
+        //find the longest prefix which is also a suffix
+        vector<int> lps(n,0);
+        solve(lps,word);
+        int suffix_len=lps[n-1];
+        while(suffix_len>0 && (n-suffix_len)%k!=0)suffix_len = lps[suffix_len-1];
+        if((n-suffix_len)%k==0)return (n-suffix_len)/k;
+        return (n+k-1)/k;
+    }
+};
