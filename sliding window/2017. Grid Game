@@ -1,0 +1,30 @@
+class Solution {
+public:
+    long long gridGame(vector<vector<int>>& grid) {
+        int n = grid[0].size();
+        vector<long long> pre_first(n, 0), pre_second(n, 0);
+        
+        // Compute prefix sums for both rows
+        pre_first[0] = grid[0][0];
+        pre_second[0] = grid[1][0];
+        for (int i = 1; i < n; i++) {
+            pre_first[i] = pre_first[i - 1] + grid[0][i];
+            pre_second[i] = pre_second[i - 1] + grid[1][i];
+        }
+
+        long long result = LLONG_MAX; 
+        
+        for (int i = 0; i < n; i++) {
+            long long above = (i + 1 < n) ? (pre_first[n - 1] - pre_first[i]) : 0; 
+            long long below = (i > 0) ? pre_second[i - 1] : 0;                     
+            
+            // Robot2's worst-case score at this cut
+            long long worst_case = max(above, below);
+            
+            // Minimize the worst-case score
+            result = min(result, worst_case);
+        }
+        
+        return result;
+    }
+};
