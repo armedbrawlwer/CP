@@ -1,0 +1,50 @@
+class Solution {
+public:
+// the maximum cycle can be the ans
+// also if multiple cycles of 2 len are involved they cann be connected to form 
+// max outdegree can be only one hence from above only either case will exist
+
+    int maximumInvitations(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> indegree(n,0),depth(n,1);
+        for(int i=0;i<n;i++){
+            indegree[arr[i]]++;
+        }
+        queue<int> q;
+        for(int i=0;i<n;i++){
+            if(indegree[i]==0){
+                q.push(i);
+            }
+        }
+        int longest_cycle=0,two_cycle_invitations=0;
+
+        //removing non-cyclic terms
+        while(!q.empty()){
+            int curr = q.front();
+            q.pop();
+            int next = arr[curr];
+            depth[next] = max(depth[next],depth[curr]+1);
+            if(--indegree[next]==0){
+                q.push(next);
+            }
+        }
+
+        for(int person=0;person<n;person++){
+            if(indegree[person]==0)continue;
+            int cycle_len=0;
+            int curr=person;
+            while(indegree[curr]!=0){
+                indegree[curr]=0;
+                cycle_len++;
+                curr = arr[curr];
+            }
+            if(cycle_len==2){
+                two_cycle_invitations += depth[person]+depth[arr[person]];
+            }else{
+                longest_cycle = max(longest_cycle,cycle_len);
+            }
+        }
+        return max(longest_cycle,two_cycle_invitations);
+
+    }
+};
