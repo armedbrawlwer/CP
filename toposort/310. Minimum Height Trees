@@ -1,0 +1,39 @@
+class Solution {
+public:
+    vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges) {
+        // if we hold the graph from the end we get longest height
+        // so search for the nodes with highest indegree
+        // and return the nodes present in last iteratino
+        vector<vector<int>> adj(n);
+
+        vector<int> indegree(n, 0);
+        for (auto vec : edges) {
+            int u = vec[0], v = vec[1];
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+            indegree[u] += 1;
+            indegree[v] += 1;
+        }
+        queue<int> q;
+        vector<int> ans={0};
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 1)
+                q.push(i);
+        }
+        while (!q.empty()) {
+            vector<int> tp;
+            int size = q.size();
+            while (size--) {
+                int node = q.front();
+                q.pop();
+                tp.push_back(node);
+                for (auto nei : adj[node]) {
+                    if (--indegree[nei] == 1)
+                        q.push(nei);
+                }
+            }
+            ans=tp;
+        }
+        return ans;
+    }
+};
