@@ -1,0 +1,53 @@
+class Solution {
+public:
+    // Function to check if all states are reachable from node 0 with weight <= mid
+    bool isposs(int n, vector<vector<pair<int, int>>>& adj, int mid) {
+        vector<int> vis(n, 0);
+        queue<int> q;
+        q.push(0);
+        vis[0] = 1;
+        int visctr = 0;
+
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+            visctr++;
+            for (auto& nei : adj[node]) {
+                int v = nei.first, w = nei.second;
+                if (w <= mid && !vis[v]) {
+                    vis[v] = 1;  // Mark as visited immediately
+                    q.push(v);
+                }
+            }
+        }
+        return visctr == n;  // Check if all nodes are visited
+    }
+
+    int minMaxWeight(int n, vector<vector<int>>& edges, int k) {
+        // Initialize adjacency list for the reversed graph
+        vector<vector<pair<int, int>>> adj(n);
+        for (auto& vec : edges) {
+            int u = vec[0], v = vec[1], w = vec[2];
+            adj[v].push_back({u, w});
+        }
+
+        // Find the maximum weight in the input edges to limit binary search range
+        int lo = 1, hi = 0;
+        for (auto& edge : edges) {
+            hi = max(hi, edge[2]);
+        }
+
+        // Binary search for the minimum maximum weight
+        int ans = -1;
+        while (lo <= hi) {
+            int mid = (lo + hi) / 2;
+            if (isposs(n, adj, mid)) {
+                ans = mid;  // If possible, store result and try smaller mid
+                hi = mid - 1;
+            } else {
+                lo = mid + 1;  // Otherwise, try larger mid
+            }
+        }
+        return ans;
+    }
+};
