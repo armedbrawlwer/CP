@@ -1,0 +1,49 @@
+#include <vector>
+#include <queue>
+#include <climits>
+
+using namespace std;
+
+class Solution {
+public:
+    int minCost(vector<vector<int>>& arr) {
+        int m = arr.size(), n = arr[0].size();
+        // since only cost is involved we will use Dijkstra's algorithm
+        vector<vector<int>> cost(m, vector<int>(n, INT_MAX));
+        cost[0][0] = 0;
+        
+        // Directions: up, down, left, right
+        int dr[4] = {0, 0, 1, -1}, dc[4] = {1, -1, 0, 0};
+        
+        // Min-heap priority queue: {cost, row, col}
+        priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> pq;
+        pq.push({0, 0, 0});  // Start with cost 0 at (0,0)
+        
+        while (!pq.empty()) {
+            auto vec = pq.top();
+            pq.pop();
+            int curr = vec[0], r = vec[1], c = vec[2];
+            
+            // If we've already found a better way to this cell, skip it
+            if (curr > cost[r][c])
+                continue;
+            
+            // Explore neighbors
+            for (int k = 0; k < 4; k++) {
+                int nr = r + dr[k], nc = c + dc[k];
+                if (nr < 0 || nr >= m || nc < 0 || nc >= n)  // Boundary check
+                    continue;
+
+                // Calculate the new cost for the neighbor
+                int newCost = curr + (arr[r][c] != k + 1);  // Check if direction differs
+                
+                if (newCost < cost[nr][nc]) {
+                    cost[nr][nc] = newCost;
+                    pq.push({newCost, nr, nc});  // Push neighbor to priority queue
+                }
+            }
+        }
+        
+        return cost[m-1][n-1];  // Return the minimum cost to reach the bottom-right corner
+    }
+};
