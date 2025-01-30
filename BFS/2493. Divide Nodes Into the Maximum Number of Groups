@@ -1,0 +1,69 @@
+class Solution {
+public:
+    int color[505];
+    vector<vector<int>> adj;
+    bool is_bipartite;
+    vector<int> connected_comp;
+
+    void chk(int node, int curr = 1) {
+        color[node] = curr;
+        connected_comp.push_back(node);
+        for (auto nei : adj[node]) {
+            if (color[nei] == 0) {
+                chk(nei, 3 - curr);
+            } else if (color[nei] == color[node]) {
+                is_bipartite = false;
+                return;
+            }
+        }
+    }
+
+    int get_max_dist(int node, int n) {
+        vector<int> distance(n + 1, -1);
+        queue<int> q;
+        q.push(node);
+        distance[node] = 1;
+        int max_dist = 1;
+        while (!q.empty()) {
+            int front = q.front();
+            q.pop();
+            for (auto nei : adj[front]) {  // Fixed incorrect loop variable
+                if (distance[nei] == -1) {
+                    distance[nei] = distance[front] + 1;
+                    max_dist = max(max_dist, distance[nei]);
+                    q.push(nei);
+                }
+            }
+        }
+        return max_dist;
+    }
+
+    int magnificentSets(int n, vector<vector<int>>& edges) {
+        memset(color, 0, sizeof(color)); // Fixed memset usage
+        adj.assign(n + 1, vector<int>()); // Clears adjacency list properly
+        int ans = 0;
+
+        for (auto vec : edges) {
+            int u = vec[0], v = vec[1];
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+        }
+
+        for (int i = 1; i <= n; i++) {
+            if (color[i] == 0) {
+                is_bipartite = true;
+                connected_comp.clear(); // Clears for each component
+                chk(i);
+                if (!is_bipartite)
+                    return -1;
+
+                int max_dist = 0;
+                for (auto node : connected_comp) {
+                    max_dist = max(max_dist, get_max_dist(node, n)); // Fixed function name
+                }
+                ans += max_dist;
+            }
+        }
+        return ans;
+    }
+};
