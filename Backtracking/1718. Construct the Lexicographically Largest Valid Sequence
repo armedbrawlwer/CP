@@ -1,0 +1,46 @@
+class Solution {
+public:
+    vector<int> ans;
+    int size, maxi;
+    vector<int> seq;  // Fixed-size sequence
+    vector<bool> used; // Track used numbers
+
+    bool solve(int idx) {
+        if (idx == size) {
+            return true; // Solution found
+        }
+        if (seq[idx] != 0) { 
+            return solve(idx + 1); // Skip already filled positions
+        }
+
+        for (int num = maxi; num >= 1; --num) { // Start from largest
+            if (used[num]) continue; // Skip if already placed twice
+
+            int second_pos = (num == 1) ? -1 : (idx + num); // Second occurrence index
+            if (second_pos < size && (num == 1 || seq[second_pos] == 0)) { 
+                // Place the number in both positions
+                seq[idx] = num;
+                if (second_pos != -1) seq[second_pos] = num;
+                used[num] = true;
+
+                if (solve(idx + 1)) return true; // If successful, return
+
+                // Backtrack
+                seq[idx] = 0;
+                if (second_pos != -1) seq[second_pos] = 0;
+                used[num] = false;
+            }
+        }
+        return false; // No valid sequence found
+    }
+
+    vector<int> constructDistancedSequence(int n) {
+        size = 2 * (n - 1) + 1;
+        maxi = n;
+        seq.assign(size, 0);
+        used.assign(n + 1, false);
+
+        solve(0);
+        return seq;
+    }
+};
