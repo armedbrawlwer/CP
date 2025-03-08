@@ -1,0 +1,20 @@
+class Solution {
+public:
+    string smallestNumber(string pattern) {
+        int n = pattern.size();
+        stack<int> st;
+        string result = "";
+
+        for (int i = 0; i <= n; i++) {
+            st.push(i + 1); // Push numbers from 1 to n+1
+            if (i == n || pattern[i] == 'I') {
+                // Process the stack when we reach 'I' or end of the pattern
+                while (!st.empty()) {
+                    result += to_string(st.top());
+                    st.pop();
+                }
+            }
+        }
+        return result;
+    }
+};
