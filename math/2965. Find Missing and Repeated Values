@@ -1,0 +1,32 @@
+class Solution {
+public:
+    vector<int> findMissingAndRepeatedValues(vector<vector<int>>& grid) {
+        int n = grid.size();
+        long long  N = n * n;
+        
+        // Expected sum and sum of squares
+        long long S = (N * (N + 1)) / 2;
+        long long P = (N * (N + 1) * (2 * N + 1)) / 6;
+
+        // Actual sum and sum of squares
+        long long S_actual = 0, P_actual = 0;
+        
+        for (const auto& row : grid) {
+            for (int num : row) {
+                S_actual += num;
+                P_actual += 1LL * num * num;  // Use 1LL to avoid overflow
+            }
+        }
+
+        // Compute differences
+        long long X = S_actual - S;  // a - b
+        long long Y = P_actual - P;  // a^2 - b^2
+
+        // Solve for a and b
+        long long a_plus_b = Y / X;  // (a^2 - b^2) / (a - b) = a + b
+        long long a = (X + a_plus_b) / 2;
+        long long b = a - X;
+
+        return {(int)a, (int)b};
+    }
+};
