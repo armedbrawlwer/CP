@@ -1,20 +1,22 @@
 class Solution {
 public:
 int n;
+vector<vector<int>> dp;
 
     int solve(vector<int> &nums,int ext,int ind){
         if(ind==n)return nums[ext];
         if(ind == n-1)return max(nums[ext],nums[ind]);
-
+        if(dp[ext][ind]!=-1) return dp[ext][ind];
         int f = max(nums[ind],nums[ext]) + solve(nums,ind+1,ind+2);
         int s = max(nums[ind+1],nums[ext]) + solve(nums,ind,ind+2);
-        int t = max(nums[ind+1],nums[ext]) + solve(nums,ext,ind+2);
+        int t = max(nums[ind+1],nums[ind]) + solve(nums,ext,ind+2);
 
-        return min({f,s,t});
+        return  dp[ext][ind] = min({f,s,t});
     }
 
     int minCost(vector<int>& nums) {
         n = nums.size();
+        dp.resize(n+1,vector<int>(n+1,-1));
         return solve(nums,0,1);
     }
 };
