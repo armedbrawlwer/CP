@@ -1,0 +1,20 @@
+class Solution {
+public:
+int n;
+
+    int solve(vector<int> &nums,int ext,int ind){
+        if(ind==n)return nums[ext];
+        if(ind == n-1)return max(nums[ext],nums[ind]);
+
+        int f = max(nums[ind],nums[ext]) + solve(nums,ind+1,ind+2);
+        int s = max(nums[ind+1],nums[ext]) + solve(nums,ind,ind+2);
+        int t = max(nums[ind+1],nums[ext]) + solve(nums,ext,ind+2);
+
+        return min({f,s,t});
+    }
+
+    int minCost(vector<int>& nums) {
+        n = nums.size();
+        return solve(nums,0,1);
+    }
+};
