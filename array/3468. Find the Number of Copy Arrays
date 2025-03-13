@@ -1,0 +1,16 @@
+class Solution {
+public:
+    int countArrays(vector<int>& arr, vector<vector<int>>& brr) {
+        int n = arr.size();
+        int lo = brr[0][0],hi=brr[0][1];
+        int ans=hi-lo+1;
+        //we have to find the fixed interval for each num by fixing the first element
+        for(int i=1;i<n;i++){
+            int org_diff = arr[i]-arr[i-1];
+            lo = max(lo+org_diff,brr[i][0]);
+            hi = min(hi+org_diff,brr[i][1]);
+            ans = min(ans,hi-lo+1);
+        }
+        return ans<0?0:ans;
+    }
+};
