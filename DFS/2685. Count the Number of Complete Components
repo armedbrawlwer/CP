@@ -1,0 +1,39 @@
+class Solution {
+public:
+    pair<int, int> dfs(int node, vector<vector<int>>& adj, vector<int>& vis) {
+        vis[node] = 1;
+        int nodes = 1, edges = 0;
+        for (int nei : adj[node]) {
+            edges++; // count this edge
+            if (!vis[nei]) {
+                auto [sub_nodes, sub_edges] = dfs(nei, adj, vis);
+                nodes += sub_nodes;
+                edges += sub_edges;
+            }
+        }
+        return {nodes, edges};
+    }
+
+    int countCompleteComponents(int n, vector<vector<int>>& edges) {
+        vector<vector<int>> adj(n);
+        for (auto& e : edges) {
+            adj[e[0]].push_back(e[1]);
+            adj[e[1]].push_back(e[0]);
+        }
+
+        vector<int> vis(n, 0);
+        int complete_components = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (!vis[i]) {
+                auto [nodes, edges] = dfs(i, adj, vis);
+                edges /= 2; // because each edge is counted twice
+                if (edges == (nodes * (nodes - 1)) / 2) {
+                    complete_components++;
+                }
+            }
+        }
+
+        return complete_components;
+    }
+};
