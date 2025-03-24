@@ -1,0 +1,26 @@
+class Solution {
+public:
+    int countDays(int days, vector<vector<int>>& arr) {
+        int n = arr.size();
+        sort(arr.begin(),arr.end());
+        //merge intervals
+        vector<vector<int>> ans;
+        vector<int> pre = arr[0];
+        for(int i=1;i<n;i++){
+            int prest = pre[0],prend = pre[1],currst = arr[i][0],currend=arr[i][1];
+            if(currst>prend){
+                ans.push_back(pre);
+                pre=arr[i];
+            } else {
+                pre[1] = max({prend,currend});
+            }
+        }
+        ans.push_back(pre);
+        int work=0;
+        for(auto i:ans){
+            int d = i[1]-i[0]+1;
+            work+=d;
+        }
+        return days-work;
+    }
+};
