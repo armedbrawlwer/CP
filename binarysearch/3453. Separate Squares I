@@ -1,0 +1,41 @@
+class Solution {
+public:
+    double solve(vector<vector<int>>& squares, double line) {
+        double aAbove = 0, aBelow = 0;
+        int n = squares.size();
+        for (int i = 0; i < n; i++) {
+            int x = squares[i][0], y = squares[i][1];
+            int l = squares[i][2];
+            double total = (double)l * l;
+
+            if (line <= y) {
+                aAbove += total;
+            } else if (line >= y + l) {
+                aBelow += total;
+            } else {
+                // The line intersects the square.
+                double aboveHeight = (y + l) - line;
+                double belowHeight = line - y;
+                aAbove += l * aboveHeight;
+                aBelow += l * belowHeight;
+            }
+        }
+        return aAbove - aBelow;
+    }
+
+    double separateSquares(vector<vector<int>>& arr) {
+        int n = arr.size();
+        double eps = 1e-5;
+        double lo = 0, hi = 2 * 1e9;
+
+        while (abs(hi - lo) > eps) {
+            double mid = (lo + hi) / 2.0;
+            double diff = solve(arr, mid);
+            if (diff > 0)
+                lo = mid;
+            else
+                hi = mid;
+        }
+        return hi;
+    }
+};
