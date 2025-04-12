@@ -1,0 +1,22 @@
+class Solution {
+public:
+    long long minTime(vector<int>& skill, vector<int>& mana) {
+        int n = skill.size();
+        int m = mana.size();
+        long long ans = LONG_LONG_MAX;
+        // make the first array
+        // index 0 will be start time
+        vector<long long> done(n + 1);
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // can only start when previous work finished
+                done[j + 1] = max(done[j], done[j + 1]) + skill[j] * mana[i];
+            }
+            for (int j = n - 1; j >= 0; j--) {
+                done[j] = done[j + 1] - skill[j] * mana[i];
+            }
+        }
+        return done.back();
+    }
+};
