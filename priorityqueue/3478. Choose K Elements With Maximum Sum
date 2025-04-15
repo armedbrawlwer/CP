@@ -1,0 +1,48 @@
+typedef pair<int, int> P;
+class Solution {
+public:
+    vector<long long> findMaxSum(vector<int>& nums1, vector<int>& nums2,
+                                 int k) {
+        int n = nums1.size();
+        vector<long long> ans(n, 0);
+        vector<P> v1;
+
+        for (int i = 0; i < n; i++) {
+            P p1 = {nums1[i], i};
+            v1.push_back(p1);
+        }
+        sort(v1.begin(), v1.end());
+        long long sum = 0;
+        priority_queue<int, vector<int>, greater<>> pq;
+        // sort(v2.begin(),v2.end());
+        // traverse nums1
+        for (int i = 0; i < n;) {
+            auto [ele, ind] = v1[i];
+
+            // elements that are smaller than current element=>i
+            // corresponding to these indices pick elements from nums2 and store
+            // them in min heap we already know that no.of smaller elements once
+            // we find the sum => that index will be candidate for upcoming
+            // elements
+            ans[ind] = sum;
+            //handle same elements
+            long long t=sum;
+            pq.push(nums2[ind]);
+            sum+=nums2[ind];
+            i += 1;
+            while (i < n && v1[i].first == ele) {
+                ans[v1[i].second] = t;
+                sum+=nums2[v1[i].second];
+                pq.push(nums2[v1[i].second]);
+                i += 1;
+            }
+            
+            while (pq.size() > k) {
+                sum -= pq.top();
+                pq.pop();
+            }
+            
+        }
+        return ans;
+    }
+};
