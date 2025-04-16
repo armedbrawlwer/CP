@@ -1,0 +1,44 @@
+class Solution {
+public:
+    long long calc_pairs(vector<int>& nums, unordered_map<int, int>& mp,
+                         int ind,long long& tot_pairs) {
+        int ele = nums[ind];
+        int curr_count = mp[ele];
+        long long curr_pairs =
+            curr_count > 0 ? ((curr_count) * (curr_count - 1)) / 2 : 0;
+        tot_pairs -= curr_pairs;
+        mp[ele] += 1;
+        curr_count = mp[ele];
+        long long new_pairs =
+            curr_count > 0 ? ((curr_count) * (curr_count - 1)) / 2 : 0;
+        return new_pairs;
+    }
+    long long countGood(vector<int>& nums, int k) {
+        int n = nums.size();
+        // sliding window  by keeping tracks of occurences and no.of pairs
+        long long tot_pairs = 0;
+        long long ans = 0;
+        int j = 0;
+        unordered_map<int, int> mp;
+        for (int i = 0; i < n; i++) {
+            long long new_pairs = calc_pairs(nums, mp, i,tot_pairs);
+            tot_pairs += new_pairs;
+
+            while (tot_pairs >= k) {
+                ans += n - i;
+                // move the jth pointer and update total pairs
+                int back_ele = nums[j];
+                int count = mp[back_ele];
+                long long pairs = ((count) * (count - 1)) / 2;
+                tot_pairs -= pairs;
+                mp[back_ele] -= 1;
+                count = mp[back_ele];
+                long long new_pairs_2 =
+                    count > 0 ? ((count) * (count - 1)) / 2 : 0;
+                tot_pairs += new_pairs_2;
+                j += 1;
+            }
+        }
+        return ans;
+    }
+};
