@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int minDominoRotations(vector<int>& tops, vector<int>& bottoms) {
+        int n = tops.size();
+        vector<int> top_ctr(7,0),down_ctr(7,0),same(7,0);
+        for(int i=0;i<n;i++){
+            top_ctr[tops[i]]+=1;
+            down_ctr[bottoms[i]]+=1;
+            if(tops[i] == bottoms[i])same[tops[i]]+=1;
+        }
+        int ans = INT_MAX;
+        //check all the numbers
+        for(int i=1;i<7;i++){
+            int up = top_ctr[i];
+            int down = down_ctr[i];
+            if(up + down-same[i] == n){
+                ans = min(ans,min(up,down)-same[i]);
+            }
+        }
+        return ans==INT_MAX?-1:ans;
+    }
+};
