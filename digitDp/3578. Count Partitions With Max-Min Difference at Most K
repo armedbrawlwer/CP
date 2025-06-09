@@ -1,0 +1,68 @@
+typedef long long ll;
+class Solution {
+public:
+    int n;
+    int diff;
+    int mod = 1e9 + 7;
+
+    // ll solve(vector<int>& nums, int i) {
+    //     if (i == n)
+    //         return 1;
+    //     if (dp[i] != -1)
+    //         return dp[i];
+    //     int mini = INT_MAX, maxi = INT_MIN;
+    //     ll ways = 0;
+    //     for (int j = i; j < n; j++) {
+    //         maxi = max(nums[j], maxi);
+    //         mini = min(nums[j], mini);
+    //         if (maxi - mini > diff)
+    //             break;
+    //         ways = (ways + solve(nums, j + 1)) % mod;
+    //     }
+    //     return dp[i] = ways;
+    // }
+
+    // ll tab(vector<int>& nums) {
+    //     dp.resize(n+1, 0);
+    //     dp[n] = 1;
+    //     for (int i = n - 1; i >= 0; i--) {
+    //         int mini = INT_MAX, maxi = INT_MIN;
+    //         ll ways = 0;
+    //         for (int j = i; j < n; j++) {
+    //             maxi = max(nums[j], maxi);
+    //             mini = min(nums[j], mini);
+    //             if (maxi - mini > diff)
+    //                 break;
+    //             ways = (ways + dp[j+1]) % mod;
+    //         }
+    //         dp[i] = ways;
+    //     }
+    //     return dp[0];
+    // }
+
+    ll optimal(vector<int> &nums){
+        multiset<int> ms;
+        int j=0;
+        vector<int> pref(n+1,0),dp(n+1,0);
+        dp[0]=1;
+        pref[0]=1;
+
+        for(int i=1;i<=n;i++){
+            ms.insert(nums[i-1]);
+            while(*(ms.rbegin())-*(ms.begin())>diff){
+                ms.erase(ms.find(nums[j]));
+                j+=1;
+            }
+            dp[i] = (pref[i-1] - ((j-1>=0)?pref[j-1]:0)+mod)%mod;
+            pref[i] = (pref[i-1]+dp[i])%mod;
+        }
+        return dp[n];
+    }
+
+    int countPartitions(vector<int>& nums, int k) {
+        n = nums.size();
+        diff = k;
+        return optimal(nums);
+        // return tab(nums);
+    }
+};
