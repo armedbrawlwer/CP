@@ -1,0 +1,55 @@
+class Solution {
+public:
+    bool iscons(char a,char b) {
+        int n1 = a - 'a';
+        int n2 = b - 'a';
+        if ((n1 + 1) % 26 == n2 || (n2 + 1) % 26 == n1 ||
+            (n2 + 25) % 26 == n1 || (n1 + 25) % 26 == n2)
+            return true;
+        return false;
+    }
+
+    string resultingString(string s) {
+        // can be solved using stack
+        //traverse from front and then back
+        int n = s.size();
+        stack<int> st2,st;
+        vector<int> marked(n,0);
+        string ans;
+        for (int i = 0; i < n; i++) {
+            char curr = s[i];
+            if(st.empty())st.push(i);
+            else {
+                if(iscons(curr,s[st.top()])){
+                    marked[i]=1;
+                    marked[st.top()]=1;
+                    st.pop();
+                } else {
+                    st.push(i);
+                }
+            }
+        }
+        // st.clear();
+        for(int i=n-1;i>=0;i--){
+            if(marked[i]==1)continue;
+            char curr = s[i];
+            if(st2.empty())st2.push(i);
+            else {
+                if(iscons(curr,s[st2.top()])){
+                    marked[i]=1;
+                    marked[st2.top()]=1;
+                    st2.pop();
+                } else {
+                    st2.push(i);
+                }
+            }
+        }
+        while(!st2.empty()){
+            ans+=s[st2.top()];
+            st2.pop();
+        }
+        
+        // reverse(ans.begin(),ans.end());
+        return ans;
+    }
+};
