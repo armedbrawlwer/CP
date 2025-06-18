@@ -1,0 +1,32 @@
+class Solution {
+public:
+    int mod = 1e9 + 7;
+
+    int specialTriplets(vector<int>& nums) {
+        int n = nums.size();
+        unordered_map<int, int> leftCount, rightCount;
+
+        // Count frequencies for right side initially
+        for (int i = 0; i < n; ++i) {
+            rightCount[nums[i]]++;
+        }
+
+        long long ans = 0;
+
+        for (int i = 0; i < n; ++i) {
+            rightCount[nums[i]]--; // current i is no longer in right
+            int val = nums[i];
+            int doubleVal = 2 * val;
+
+            if (rightCount.find(doubleVal) != rightCount.end() && leftCount.find(doubleVal) != leftCount.end()) {
+                long long left = leftCount[doubleVal];
+                long long right = rightCount[doubleVal];
+                ans = (ans + (left * right) % mod) % mod;
+            }
+
+            leftCount[nums[i]]++; // current i added to left
+        }
+
+        return ans;
+    }
+};
