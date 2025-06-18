@@ -1,0 +1,32 @@
+class Solution {
+public:
+    long long maximumProduct(vector<int>& nums, int m) {
+        int n = nums.size();
+        long long ans=LONG_MIN;
+        if(m==1){
+            long long maxi = *max_element(nums.begin(),nums.end());
+            long long mini = *min_element(nums.begin(),nums.end());
+            long long a = maxi*maxi;
+            long long b = mini*mini;
+            return max(a,b);
+        }
+        //if last element of array is last element of subsequence then the first element has to be
+        // i-m+1
+        vector<long long> ma(n),mi(n);
+        ma[0]=mi[0]=nums[0];
+        for(int i=1;i<n;i++){
+            ma[i]=max(ma[i-1],(long long)nums[i]);
+            mi[i]=min(mi[i-1],(long long)nums[i]);
+        }
+
+        for(int i=n-1;i>=m-1;i--){
+            //find max element and min element in case of negative integer
+            int max_ind = i-m+1;
+            long long maxi = ma[max_ind];
+            long long mini = mi[max_ind];
+            long long a = nums[i]*maxi,b = nums[i]*mini;
+            ans = max({ans,a,b});
+        }
+        return ans;
+    }
+};
