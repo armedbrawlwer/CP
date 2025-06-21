@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int maxDistance(string s, int k) {
+        int n = s.size();
+        int nor = 0,sou=0,eas=0,wes=0;
+        int ans = 0;
+        for(int i=0;i<n;i++){
+            if(s[i]=='N')nor+=1;
+            else if(s[i]=='E')eas+=1;
+            else if(s[i]=='S')sou+=1;
+            else wes+=1;
+
+            int curr_steps = i+1;
+            int curr_md = abs(nor-sou)+abs(eas-wes);
+            int wasted = curr_steps - curr_md;
+            int xtra=0;
+            if(wasted!=0){
+                xtra = min(wasted,2*k);
+            }
+            int final_md = curr_md+xtra;
+            ans = max(ans,final_md);
+        }
+        return ans;
+    }
+};
