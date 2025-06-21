@@ -1,0 +1,25 @@
+class Solution {
+public:
+    vector<vector<int>> grid;
+    int val=0;
+
+    void solve(int row,int col,int size){
+        if(size == 1){
+            grid[row][col] = val++;
+            return;
+        }
+        int subsize = size/2;
+        solve(row,col+subsize,subsize);
+        solve(row+subsize,col+subsize,subsize);
+        solve(row+subsize,col,subsize);
+        solve(row,col,subsize);
+        return;
+    }
+    
+    vector<vector<int>> specialGrid(int N) {
+        int n = (1<<N);
+        grid.assign(n,vector<int>(n));
+        solve(0,0,n);
+        return grid;        
+    }
+};
