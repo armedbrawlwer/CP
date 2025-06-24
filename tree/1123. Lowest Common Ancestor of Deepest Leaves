@@ -1,0 +1,22 @@
+class Solution {
+public:
+    // Return: pair<depth, LCA node>
+    pair<int, TreeNode*> dfs(TreeNode* node) {
+        if (!node) return {0, nullptr};
+
+        auto left = dfs(node->left);
+        auto right = dfs(node->right);
+
+        if (left.first == right.first) {
+            return {left.first + 1, node}; // current node is LCA
+        } else if (left.first > right.first) {
+            return {left.first + 1, left.second}; // deeper in left
+        } else {
+            return {right.first + 1, right.second}; // deeper in right
+        }
+    }
+
+    TreeNode* lcaDeepestLeaves(TreeNode* root) {
+        return dfs(root).second;
+    }
+};
