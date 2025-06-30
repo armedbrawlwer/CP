@@ -1,0 +1,38 @@
+typedef long long ll;
+class Solution {
+public:
+
+    ll fun(vector<int> even,vector<int> odd,bool parity,int n){
+        ll ans=0;
+        int even_ind = 0,odd_ind = 0;
+        for(int i=0;i<n;i++){
+            if((i%2==0)==parity){
+                if(even_ind == even.size())return LONG_LONG_MAX;
+                ans+=abs(i-even[even_ind++]);
+            }else {
+                if(odd_ind == odd.size())return LONG_LONG_MAX;
+                ans+=abs(i-odd[odd_ind++]);
+            }
+        }
+        return ans;
+    }
+
+    int minSwaps(vector<int>& nums) {
+        int n = nums.size();
+        //explore all the posiblities
+        //when starts from even and when starts from odd
+        vector<int> even,odd;
+        for(int i=0;i<n;i++){
+            if(nums[i]%2==0)even.push_back(i);
+            else odd.push_back(i);
+        }
+        int evens=even.size(),odds = odd.size();
+        if(abs(evens-odds)>1)return -1;
+        ll ans = LONG_LONG_MAX;
+        //starting with even parity
+        if(evens>=odds) ans = min(ans,fun(even,odd, true,n));
+        if(odds>=evens) ans = min(ans,fun(even,odd, false,n));
+        if(ans==LONG_LONG_MAX)return -1;
+        return ans/2;
+    }
+};
