@@ -1,0 +1,40 @@
+class Solution {
+public:
+    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        //topological sort
+        // using kahn algo
+        //first we will reverse the graph
+        int n = graph.size();
+        vector<vector<int>> arr(n);
+
+        for(int i=0;i<graph.size();i++){
+            for(auto j:graph[i]){
+                arr[j].push_back(i);
+            }
+        }
+        vector<int> indegree(n,0);
+        for(auto vec:arr){
+            for(auto node:vec){
+                indegree[node]+=1;
+            }
+        }
+        queue<int> q;
+        for(int i=0;i<n;i++){
+            if(indegree[i]==0)q.push(i);
+        }
+        vector<int> ans;
+        while(!q.empty()){
+            auto node = q.front();
+            q.pop();
+            ans.push_back(node);
+            for(auto nei:arr[node]){
+                indegree[nei]-=1;
+                if(indegree[nei]==0){
+                    q.push(nei);
+                }
+            }
+        }
+        sort(ans.begin(),ans.end());
+        return ans;
+    }
+};
