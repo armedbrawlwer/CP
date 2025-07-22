@@ -1,0 +1,43 @@
+class Solution {
+public:
+    int maxKDivisibleComponents(int n, vector<vector<int>>& edges,
+                                vector<int>& values, int k) {
+        vector<vector<int>> arr(n);
+        if(n==1)return 1;
+        vector<long long> new_values;
+        for(auto i:values){
+            new_values.push_back(1LL*i);
+        }
+        for (auto i : edges) {
+            int u = i[0], v = i[1];
+            arr[u].push_back(v);
+            arr[v].push_back(u);
+        }
+        queue<int> q;
+        vector<int> degree(n, 0);
+        for (int i = 0; i < n; i++) {
+            degree[i] = arr[i].size();
+        }
+        for (int i = 0; i < n; i++) {
+            if (degree[i] == 1) {
+                q.push(i);
+            }
+        }
+        int comp = 0;
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+            degree[node]-=1;
+            long long add_value = new_values[node]%k==0?0:new_values[node];
+            if(add_value==0)comp+=1;
+            for(auto nei:arr[node]){
+                if(degree[nei]>0){
+                    new_values[nei]+=add_value;
+                    degree[nei]-=1;
+                    if(degree[nei]==1)q.push(nei);
+                }
+            }
+        }
+        return comp;
+    }
+};
