@@ -1,0 +1,99 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int N = 10001;  // Limit for sieve
+    static const int maxnum = 1e4;
+
+    vector<bool> isPrime;
+
+    // Sieve of Eratosthenes to find prime numbers
+    void sieve() {
+        isPrime.resize(N, true);
+        isPrime[0] = isPrime[1] = false;
+        for (int i = 2; i < N; i++) {
+            if (isPrime[i]) {
+                for (int j = i * 2; j < N; j += i) {
+                    isPrime[j] = false;
+                }
+            }
+        }
+    }
+
+    // Generate valid neighbors by incrementing or decrementing digits
+    vector<int> getnei(int node, int len) {
+        vector<int> neighbors;
+        string s = to_string(node);
+        for (int i = 0; i < len; i++) {
+            char original = s[i];
+
+            // Try incrementing the digit
+            if (original < '9') {
+                s[i] = original + 1;
+                int newVal = stoi(s);
+                if (newVal < N && !isPrime[newVal]) {
+                    neighbors.push_back(newVal);
+                }
+                s[i] = original;  // Restore the original digit
+            }
+
+            // Try decrementing the digit
+            if (original > '0') {
+                s[i] = original - 1;
+                int newVal = stoi(s);
+                if (newVal < N && !isPrime[newVal]) {
+                    neighbors.push_back(newVal);
+                }
+                s[i] = original;  // Restore the original digit
+            }
+        }
+        return neighbors;
+    }
+
+    int minOperations(int n, int m) {
+        sieve();  // Generate primes
+
+        // If `n` or `m` is prime or numbers have different lengths, return -1
+        if (isPrime[n] || isPrime[m]) return -1;
+        if (to_string(n).length() != to_string(m).length()) return -1;
+
+        // If `n` equals `m`, no operations needed
+        if (n == m) return n;
+
+        // Dijkstra's algorithm
+        vector<long long> dist(maxnum, LLONG_MAX);
+        dist[n] = n;
+
+        auto compare = [](const pair<int, long long>& a, const pair<int, long long>& b) {
+            return a.second > b.second;
+        };
+        priority_queue<pair<int, long long>, vector<pair<int, long long>>, decltype(compare)> pq(compare);
+
+        pq.push({n, n});  // Start with cost 0 from `n`
+
+        int len = to_string(n).length();
+
+        while (!pq.empty()) {
+            auto [curr, cost] = pq.top();
+            pq.pop();
+
+            // If we reached the target, return the cost
+            if (curr == m) return cost;
+
+            // Skip if the cost is already outdated
+            if (cost > dist[curr]) continue;
+
+            // Generate neighbors and update costs
+            for (int next : getnei(curr, len)) {
+                long long newCost = cost + next;
+                if (newCost < dist[next]) {
+                    dist[next] = newCost;
+                    pq.push({next, newCost});
+                }
+            }
+        }
+
+        return -1;  // If transformation is impossible
+    }
+};
