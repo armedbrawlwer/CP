@@ -1,0 +1,50 @@
+class Solution {
+public:
+vector<vector<int>> arr;
+vector<int> ans;
+int N;
+int root_result;
+vector<int> children_count;
+vector<int> dist_to_children;
+
+    int  dfs1(int node,int parent,int depth){
+        int ctr=1;
+        root_result+=depth;
+        for(auto i:arr[node]){
+            if(i==parent)continue;
+            ctr+=dfs1(i,node,depth+1);
+        }
+        children_count[node]=ctr;
+        return ctr;
+    }
+
+    int dfs2(int node,int parent){
+        for(auto nei:arr[node]){
+            if(nei == parent)continue;
+            ans[nei] = ans[node]-children_count[nei] + (N-children_count[nei]);
+            dfs2(nei,node);
+        }
+        return 0;
+    }
+
+    vector<int> sumOfDistancesInTree(int n, vector<vector<int>>& edges) {
+        arr.resize(n);
+        ans.resize(n);
+        root_result=0;
+        N=n;
+        children_count.assign(n,0);
+        dist_to_children.assign(n,0);
+        for(auto i:edges){
+            int u = i[0],v=i[1];
+            arr[u].push_back(v);
+            arr[v].push_back(u);
+        }
+
+        dfs1(0,-1,0);
+        ans[0]=root_result;
+        dfs2(0,-1);
+
+        return ans;
+        
+    }
+};
