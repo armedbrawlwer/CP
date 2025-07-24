@@ -1,0 +1,41 @@
+class Solution {
+public:
+    int numBusesToDestination(vector<vector<int>>& routes, int source, int target) {
+        if(source == target)return 0;
+        int n = routes.size();
+        unordered_map<int,list<int>> arr;
+        for(int route=0;route<n;route++){
+            for(auto stop:routes[route]){
+                arr[stop].push_back(route);
+            }
+        }
+        set<int> vis;
+        int ans=1;
+        //enter the route no which has source spot
+        queue<int> q;
+        for(auto route:arr[source]){
+            q.push(route);
+            vis.insert(route);
+        }
+        while(!q.empty()){
+            int size = q.size();
+            while(size--){
+                int front  = q.front();
+                q.pop();
+                for(auto stop:routes[front]){
+                    if(stop == target)return ans;
+                    for(auto nextRoute:arr[stop]){
+                        if(!vis.count(nextRoute)){
+                            q.push(nextRoute);
+                            vis.insert(nextRoute);
+                        }
+                    }
+                }
+            }
+            ans+=1;
+        }
+        return -1;
+
+
+    }
+};
