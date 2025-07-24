@@ -1,0 +1,35 @@
+class Solution {
+public:
+
+    int solverec(string ring, string key,int i,int j,unordered_map<char,vector<int>> &mp,int dp[101][101]){
+        if(j==key.size())return 0;
+        int m = ring.size();
+        if(dp[i][j]!=-1)return dp[i][j];
+
+        char curr = ring[i];
+        char need = key[j];
+        //calculate the operations
+        //find all occurences 
+        int op = INT_MAX;
+        for (auto ind : mp[need]) {
+            int clockwise = abs(ind - i);
+            int counterclockwise = m - clockwise;
+            int moves = min(clockwise, counterclockwise);
+            op = min(op, moves + solverec(ring, key, ind, j + 1, mp,dp));
+        }
+        return dp[i][j]= op+1;
+
+    }
+
+    int findRotateSteps(string ring, string key) {
+        unordered_map<char,vector<int>> mp;
+        int m = ring.size(),n=key.size();
+        for(int i=0;i<m;i++){
+            mp[ring[i]].push_back(i);
+        }
+        int i=0,j=0;
+        int dp[101][101];
+        memset(dp,-1,sizeof(dp));
+        return solverec(ring,key,i,j,mp,dp);
+    }
+};
