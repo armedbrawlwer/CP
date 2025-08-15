@@ -1,0 +1,66 @@
+class Solution {
+public:
+unordered_map<int,vector<int>> mp;
+vector<int> itime,otime;
+vector<int> cumxor;
+int time=0;
+
+    void dfs(int node,int par,vector<int>& nums){
+        itime[node]=time;
+        time+=1;
+
+        for(auto nei:mp[node]){
+            if(nei!=par){
+                dfs(nei,node,nums);
+                cumxor[node] ^= cumxor[nei];
+            }
+        }
+        otime[node]=time;
+        time+=1;
+    }
+
+    bool isancestor(int u,int v){
+        return itime[v]>=itime[u] && otime[u]>=otime[v];
+    }
+
+    int minimumScore(vector<int>& nums, vector<vector<int>>& edges) {
+        int n = nums.size();
+        for(auto i:edges){
+            int u = i[0],v = i[1];
+            mp[u].push_back(v);
+            mp[v].push_back(u);
+        }
+        itime.assign(n,0);
+        otime.assign(n,0);
+        cumxor=nums;
+        int ans=INT_MAX;
+
+        //calculate the xor values
+        dfs(0,-1,nums);
+
+        //check which edges to remove
+        for(int node1=1;node1<n;node1++){
+            for(int node2=node1+1;node2<n;node2++){
+                int comp1,comp2,comp3;
+                if(isancestor(node1,node2)){
+                    comp1 = cumxor[node2];
+                    comp2 = cumxor[node1] ^ comp1;
+                    comp3 = cumxor[0] ^ comp1 ^ comp2;
+                } else if(isancestor(node2,node1)){
+                    comp1 = cumxor[node1];
+                    comp2 = cumxor[node2] ^ comp1;
+                    comp3 = cumxor[0] ^ comp1 ^ comp2;
+                } else {
+                    comp1 = cumxor[node1];
+                    comp2 = cumxor[node2];
+                    comp3 = cumxor[0] ^ comp1 ^ comp2;
+                }
+
+                int maxi = max({comp1,comp2,comp3});
+                int mini = min({comp1,comp2,comp3});
+                ans = min(ans,maxi-mini);
+            }
+        }
+    return ans;
+    }
+};
