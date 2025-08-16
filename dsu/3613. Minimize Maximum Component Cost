@@ -1,0 +1,49 @@
+class Solution {
+public:
+    vector<int> parent;
+    int find_parent(int i){
+        int root = parent[i];
+        if (parent[root] != root) {
+            return parent[i] = find_parent(root);
+        }
+        return root;
+    }
+
+    
+    static bool cmp(vector<int> &a,vector<int> &b){
+        return a[2]<b[2];
+    }
+    
+    int minCost(int n, vector<vector<int>>& edges, int k) {
+        //to avoid cyclic edges first construct mst
+        if(k==n)return 0;
+        parent.resize(n);
+        for(int i=0;i<n;i++)parent[i]=i;
+        int size = edges.size();
+        sort(edges.begin(),edges.end(),cmp);
+    vector<vector<int>> final_edges;
+        
+
+        //construct mst=>one component
+        for(int i=0;i<size;i+=1){
+            int u = edges[i][0],v = edges[i][1];
+            int par_u = find_parent(u);
+            int par_v = find_parent(v);
+            if(par_u == par_v)continue;
+            parent[par_v] = par_u;
+            final_edges.push_back(edges[i]);
+        }
+
+        sort(final_edges.rbegin(),final_edges.rend(),cmp);
+        
+        //as we remove the edge a new component gets formed
+        int comp = 1;
+        int i=0;
+        while(i<final_edges.size() && comp<k){
+            comp+=1;
+            i+=1;
+        }
+        return i<final_edges.size()?final_edges[i][2]:0;
+        
+    }
+};
