@@ -1,0 +1,30 @@
+class Solution {
+public:
+    long long numOfSubsequences(string s) {
+        int n = s.size();
+        vector<long long> pre(n,0),suff(n,0);
+        for(int i=0;i<n;i++){
+            pre[i] = s[i]=='L'?1:0;
+            suff[i] = s[i]=='T'?1:0;
+        }
+        for(int i=1;i<n;i++){
+            pre[i]+=pre[i-1];
+        }
+        for(int i=n-2;i>=0;i-=1){
+            suff[i]+=suff[i+1];
+        }
+        long long ans=0;
+        long long op1=0,op2=0,op3=0;
+
+        for(int i=0;i<n;i++){
+            if(s[i]=='C'){
+                op1 += pre[i]*(suff[i]+1);
+                op2 += (pre[i]+1)*suff[i];
+                ans+=pre[i]*suff[i];
+            } else {
+                op3 = max(op3,pre[i]*suff[i]);
+            }
+        }
+        return max({op1,op2,ans+op3});
+    }
+};
