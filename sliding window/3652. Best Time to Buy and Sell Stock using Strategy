@@ -1,0 +1,31 @@
+class Solution {
+public:
+    long long maxProfit(vector<int>& prices, vector<int>& strategy, int k) {
+        int n = (int)prices.size();
+        // prefix sums
+        vector<long long> P(n), S(n);
+        for (int i = 0; i < n; ++i) {
+            long long pr = prices[i];
+            P[i] = (i ? P[i-1] : 0LL) + pr;
+            S[i] = (i ? S[i-1] : 0LL) + pr * (long long)strategy[i];
+        }
+
+        long long base = S[n-1];
+        if (k == 0 || k > n) return base;  // no valid modification
+
+        long long ans = base;
+        for (int i = k - 1; i < n; ++i) {
+            int j = i - k + 1;
+
+            // original contribution of window [j, i]
+            long long orig_win = S[i] - (j ? S[j - 1] : 0LL);
+
+            // after modification: sum of prices over the last k/2 of the window
+            long long sell_sum = P[i] - P[i - k/2];
+
+            long long cand = base - orig_win + sell_sum;
+            if (cand > ans) ans = cand;
+        }
+        return ans;
+    }
+};
