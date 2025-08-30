@@ -1,0 +1,22 @@
+class Solution {
+public:
+
+    bool isposs(vector<vector<int>>& fruits, int startPos, int k,int lt,int rt){
+        return min(abs(startPos-lt)+(rt-lt),abs(rt-startPos)+(rt-lt))>k;
+    }
+
+    int maxTotalFruits(vector<vector<int>>& fruits, int startPos, int k) {
+        int n = fruits.size();
+        int lt=0,ans=0;
+        int curr=0;
+        for(int i=0;i<n;i++){
+            curr+=fruits[i][1];
+            while(lt<=i && isposs(fruits,startPos,k,fruits[lt][0],fruits[i][0])){
+                curr-=fruits[lt][1];
+                lt+=1;
+            }
+            ans = max(ans,curr);
+        }
+        return ans;
+    }
+};
