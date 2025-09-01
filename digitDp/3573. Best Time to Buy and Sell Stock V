@@ -1,0 +1,47 @@
+#include <vector>
+#include <algorithm>
+#include <climits>
+
+using namespace std;
+
+class Solution {
+public:
+    int n;
+    vector<vector<vector<long long>>> dp;
+
+    long long solve(vector<int>& prices, int k, int i, int stock) {
+        if (i == n) {
+            if (stock == 0) return 0;
+            else return INT_MIN;
+        }
+        if (k < 0) return INT_MIN;
+        if (dp[i][k][stock] != INT_MIN) return dp[i][k][stock];
+        
+        long long leave = solve(prices, k, i + 1, stock);
+        long long op1 = INT_MIN, op2 = INT_MIN, op3 = INT_MIN, op4 = INT_MIN;
+        
+        if (stock == 0) {
+            if (k > 0) {
+                op1 = -prices[i] + solve(prices, k - 1, i + 1, 1); // Start normal buy
+                op3 = prices[i] + solve(prices, k - 1, i + 1, 2);  // Start short sell
+            }
+        } else if (stock == 1) {
+            op2 = prices[i] + solve(prices, k, i + 1, 0); // Sell to complete normal buy
+        } else if (stock == 2) {
+            op4 = -prices[i] + solve(prices, k, i + 1, 0); // Buy back to complete short sell
+        }
+        
+        dp[i][k][stock] = max({leave, op1, op2, op3, op4});
+        return dp[i][k][stock];
+    }
+    
+    long long maximumProfit(vector<int>& prices, int k) {
+        n = prices.size();
+        if (n == 0 || k == 0) return 0;
+        // Limit k to a reasonable number to avoid memory issues
+        int max_k = min(k, 2 * n);
+        dp.assign(n, vector<vector<long long>>(max_k + 1, vector<long long>(3, INT_MIN)));
+        long long result = solve(prices, max_k, 0, 0);
+        return result < 0 ? 0 : result;
+    }
+};
