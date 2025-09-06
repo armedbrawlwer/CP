@@ -1,0 +1,38 @@
+class Solution {
+public:
+int n;
+
+    int solve(vector<int> &rods,int i,int diff){
+        if(i>=n)return diff==0?0:INT_MIN;
+
+        int w1 = solve(rods,i+1,diff);
+        //left part
+        int w2 = rods[i]+solve(rods,i+1,diff-rods[i]);
+        //right part
+        int w3 = rods[i]+solve(rods,i+1,diff+rods[i]);
+
+        return max({w1,w2,w3});
+    }
+
+    int tallestBillboard(vector<int>& rods) {
+         n = rods.size();
+         int maxi = *max_element(rods.begin(),rods.end());
+         int mini = *min_element(rods.begin(),rods.end());
+         int max_diff = maxi-mini;
+         vector<vector<int>> dp(n+1,vector<int>(maxi+1,INT_MIN));
+         dp[n][0]=0;
+
+         for(int i=n-1;i>=0;i--){
+            for(int diff = max_diff;diff>=0;diff--){
+                int w1 = dp[i+1][diff];
+                int w2=INT_MIN,w3=INT_MIN;
+                if(diff+rods[i]<=max_diff)w2 = max(w2,rods[i]+dp[i+1][diff+rods[i]]);
+                if(diff-rods[i]>=0)w2 = max(w3,rods[i]+dp[i+1][diff-rods[i]]);
+
+                dp[i][diff]=max({w1,w2,w3});
+            }
+         }
+        // return solve(rods,0,0)/2;
+        return dp[0][0];  
+    }
+};
