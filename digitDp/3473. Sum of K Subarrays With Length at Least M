@@ -1,0 +1,48 @@
+class Solution {
+public:
+    vector<int> pref;
+    int n, K, M;
+    int mini = -1000000000;
+    int dp[2001][2001][2];
+
+    int solve(const vector<int>& nums, const vector<int>& prefix, int index,
+              int remaining, int canExtend, int m) {
+        if (index >= nums.size())
+            return (remaining == 0 ? 0 : mini);
+        if (dp[index][remaining][canExtend] != -1)
+            return dp[index][remaining][canExtend];
+
+        int best = mini;
+
+        if (canExtend) {
+            best = max(best, nums[index] + solve(nums, prefix, index + 1,
+                                                 remaining, 1, m));
+            best = max(best, solve(nums, prefix, index, remaining, 0, m));
+        } else {
+            if (remaining == 0)
+                return 0;
+            best = max(best, solve(nums, prefix, index + 1, remaining, 0, m));
+            if (nums.size() - index >= m) {
+                int currentSum = prefix[index + m] - prefix[index];
+                best = max(best, currentSum + solve(nums, prefix, index + m,
+                                                    remaining - 1, 1, m));
+            }
+        }
+
+        return dp[index][remaining][canExtend] = best;
+    }
+
+   
+
+    int maxSum(vector<int>& nums, int k, int m) {
+int n = nums.size();
+        vector<int> prefix(n + 1, 0);
+        for (int i = 0; i < n; i++) {
+            prefix[i + 1] = prefix[i] + nums[i];
+        }
+        memset(dp,-1,sizeof(dp));
+
+        // dp.resize(n + 1, vector<vector<int>>(k + 1, vector<int>(2, mini)));
+        return solve(nums, prefix, 0, k, 0, m);
+    }
+};
