@@ -1,0 +1,45 @@
+class Solution {
+public:
+    bool maxSubstringLength(string s, int k) {
+        int n = s.size();
+        vector<int> first(26,-1),last(26,-1);
+        for(int i=0;i<s.size();i++){
+            if(first[s[i]-'a']==-1)first[s[i]-'a']=i;
+            last[s[i]-'a']=i;
+        }
+        vector<vector<int>> interval;
+
+        for(int i=0;i<n;i++){
+            int ind = s[i]-'a';
+            if(first[ind]!=i)continue;
+            int j = last[ind];
+            bool flag=true;
+            for(int k=i;k<=j;k++){
+                j = max(j,last[s[k]-'a']);
+            }
+            for(int k=i;k<=j;k++){
+                if(first[s[k]-'a']<i){
+                    flag=false;
+                    break;
+                }
+            }
+            if(!flag)continue;
+            if(i==0 && j==n-1)continue;
+
+            interval.push_back({i,j});
+        }
+        sort(interval.begin(),interval.end(),[](auto &a, auto &b){
+            return a[1]<b[1];
+        });
+        int st=0,end=-1;
+        int ans=0;
+        for(auto i:interval){
+            if(i[0]>end){
+                ans+=1;
+                end = i[1];
+            }
+        }
+        return ans>=k;
+
+    }
+};
