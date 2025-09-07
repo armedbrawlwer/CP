@@ -1,0 +1,28 @@
+class Solution {
+public:
+    long long maxWeight(vector<int>& pizzas) {
+        int n = pizzas.size();
+        int days = n / 4;
+        long long wt = 0;
+
+        int odd = (days + 1) / 2;   // number of odd days
+        int even = days - odd;      // number of even days
+
+        sort(pizzas.begin(), pizzas.end());
+        int idx = n - 1;
+
+        // Odd days → pick largest as Z
+        while (odd-- > 0) {
+            wt += pizzas[idx--];
+        }
+
+        // Even days → pick second largest (Y)
+        idx--; // skip Z
+        while (even-- > 0) {
+            wt += pizzas[idx];
+            idx -= 2; // skip W and X
+        }
+
+        return wt;
+    }
+};
