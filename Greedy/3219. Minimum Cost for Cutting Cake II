@@ -1,0 +1,35 @@
+class Solution {
+public:
+    long long minimumCost(int m, int n, vector<int>& hrr, vector<int>& vrr) {
+        sort(vrr.rbegin(), vrr.rend());
+        sort(hrr.rbegin(), hrr.rend());
+        int hb = 1, vb = 1;
+        int sh = hrr.size();
+        int sv = vrr.size();
+        int i = 0, j = 0;
+        long long ans=0;
+        while (i < sh && j < sv) {
+            if (hrr[i] > vrr[j]) {
+                // make a horizontal cut
+                ans += hrr[i] * vb;
+                hb += 1 ;
+                i += 1;
+            } else {
+                ans += vrr[j] * hb;
+                vb += 1;
+                j += 1;
+            }
+        }
+        while (i < sh) {
+            ans += hrr[i] * vb;
+            hb += 1 ;
+            i += 1;
+        }
+        while (j < sv) {
+            ans += vrr[j] * hb;
+            vb += 1;
+            j += 1;
+        }
+        return ans;
+    }
+};
