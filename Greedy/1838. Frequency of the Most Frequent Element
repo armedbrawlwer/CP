@@ -1,0 +1,35 @@
+typedef long long ll;
+class Solution {
+public:
+    int maxFrequency(vector<int>& nums, int k) {
+        int ans =0 ;
+        int len = k;
+        int n = nums.size();
+        sort(nums.rbegin(),nums.rend());
+        vector<ll> pref;
+        for(auto i:nums){
+            pref.push_back(1LL*i);
+        }
+        for(int i=1;i<n;i++){
+            pref[i]+=pref[i-1];
+        }
+        int j=0;
+        for(int i=0;i<n;i++){
+            //check if current element can already be included
+            ll diff = nums[j]-nums[i];
+            ll currWinLen = i-j+1;
+            ll currWinSum = pref[i]-(j-1>=0?pref[j-1]:0);
+            ll reqWinSum = nums[j]*currWinLen;
+            while(currWinSum + k < reqWinSum){
+                j+=1;
+                currWinLen = i-j+1;
+                currWinSum = pref[i]-(j-1>=0?pref[j-1]:0);
+                reqWinSum = nums[j]*currWinLen;
+            }
+
+            // ans = max(ans,i-j+1);
+            ans = max(ans,i-j+1);
+        }
+        return ans;
+    }
+};
