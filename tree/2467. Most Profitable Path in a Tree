@@ -1,0 +1,62 @@
+class Solution {
+public:
+    unordered_map<int, list<int>> adj;
+    int ans;
+
+    bool bobtravel(int node, int time, int par, vector<int>& arr) {
+        arr[node] = time;
+        if (node == 0) return true; // reached root
+
+        for (auto nei : adj[node]) {
+            if (nei == par) continue;
+            if (bobtravel(nei, time + 1, node, arr)) return true;
+        }
+
+        arr[node] = -1; // not on Bob's path
+        return false;
+    }
+
+    void alicetravel(int node, int time, int par, vector<int>& arr,
+                     vector<int>& amt, int income) {
+        bool isleaf = true;
+        int curnodeamt = 0;
+
+        if (arr[node] == -1) {
+            curnodeamt = amt[node];
+        } else {
+            if (time < arr[node]) {
+                curnodeamt = amt[node];
+            } else if (time == arr[node]) {
+                curnodeamt = amt[node] / 2;
+            }
+        }
+
+        for (auto nei : adj[node]) {
+            if (nei == par) continue;
+            isleaf = false;
+            alicetravel(nei, time + 1, node, arr, amt, income + curnodeamt);
+        }
+
+        if (isleaf) {
+            ans = max(ans, income + curnodeamt);
+        }
+    }
+
+    int mostProfitablePath(vector<vector<int>>& edges, int bob,
+                           vector<int>& amount) {
+        for (auto& e : edges) {
+            int u = e[0], v = e[1];
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+        }
+
+        int n = edges.size() + 1;
+        ans = INT_MIN;
+
+        vector<int> distbybob(n, -1);
+        bobtravel(bob, 0, -1, distbybob);
+        alicetravel(0, 0, -1, distbybob, amount, 0);
+
+        return ans;
+    }
+};
