@@ -1,0 +1,35 @@
+class Solution {
+public:
+    int minArrivalsToDiscard(vector<int>& arr, int w, int m) {
+        // sliding window template
+        // but for every element we have an independent window
+        int n = arr.size();
+        int ans = 0;
+        int max_type = *max_element(arr.begin(), arr.end());
+        vector<int> typeCtr(max_type + 1, 0);
+        vector<bool> alreadyRemoved(n,false);
+        // w-day window
+        int j = 0;
+        for (int i = 0; i < n; i++) {
+            typeCtr[arr[i]] += 1;
+
+            int winlen = i - j + 1;
+            if (winlen == w) {
+                // check if violation of counter
+                if (typeCtr[arr[i]] > m) {
+                    // discard
+                    ans += 1;
+                    typeCtr[arr[i]] -= 1;
+                alreadyRemoved[i]=1;
+                }
+                if(!alreadyRemoved[j])typeCtr[arr[j]] -= 1;
+                j += 1;
+            } else if (winlen < w && typeCtr[arr[i]] > m) {
+                typeCtr[arr[i]] -= 1;
+                alreadyRemoved[i]=1;
+                ans += 1;
+            }
+        }
+        return ans;
+    }
+};
