@@ -1,0 +1,32 @@
+class Solution {
+public:
+    long long bowlSubarrays(vector<int>& nums) {
+        int n = nums.size();
+        long long ans=0;
+        int l=0;
+        //for each index we want ht eprev and next greater element
+        //monotonic stack
+        vector<int> nextLeft(n,-1);
+        stack<int> st;
+        for(int i=0;i<n;i++)
+        {
+            while(!st.empty() && nums[st.top()]<nums[i])st.pop();
+            if(!st.empty())nextLeft[i] = st.top();
+            st.push(i);
+        }
+        vector<int> nextRight(n,n);
+        stack<int> st2;
+        for(int i=n-1;i>=0;i--)
+        {
+            while(!st2.empty() && nums[st2.top()]<nums[i])st2.pop();
+            if(!st2.empty())nextRight[i] = st2.top();
+            st2.push(i);
+        }
+
+        for(int i=0;i<n;i++){
+            if(nextLeft[i]==-1 || nextRight[i]==n)continue;
+            ans+=1;
+        }
+        return ans;
+    }
+};
