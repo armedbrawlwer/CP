@@ -1,0 +1,35 @@
+class Solution {
+public:
+    int distinctPoints(string s, int k) {
+        int n = s.size();
+        map<char, int> mp;
+        mp['U'] = 0;
+        mp['D'] = 1;
+        mp['L'] = 2;
+        mp['R'] = 3;
+
+        vector<vector<int>> pref(n, vector<int>(4, 0));
+        for (int i = 0; i < n; i++) {
+            pref[i][mp[s[i]]] += 1;
+            for (int j = 0; j < 4; j++) {
+                pref[i][j] += i > 0 ? pref[i - 1][j] : 0;
+            }
+        }
+
+        set<pair<int, int>> st;
+        // removing substring of length k for each index possible
+        for (int i = 0; i <= n - k; i++) {
+            int l = i;
+            int r = i + k - 1;
+
+            int u = pref[n - 1][0] - (pref[r][0] - (l > 0 ? pref[l - 1][0] : 0));
+            int d = pref[n - 1][1] - (pref[r][1] - (l > 0 ? pref[l - 1][1] : 0));
+            int x = pref[n - 1][2] - (pref[r][2] - (l > 0 ? pref[l - 1][2] : 0));
+            int y = pref[n - 1][3] - (pref[r][3] - (l > 0 ? pref[l - 1][3] : 0));
+
+            st.insert({u-d,y-x});
+        }
+
+        return st.size();
+    }
+};
