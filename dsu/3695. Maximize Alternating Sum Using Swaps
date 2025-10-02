@@ -1,0 +1,67 @@
+class Solution {
+public:
+int n;
+vector<int> parent,rank;
+
+    int find_parent(int u){
+        if(parent[u]!=u)return parent[u] = find_parent(parent[u]);
+        return parent[u];
+    }
+
+    void union_set(int u,int v){
+        int a = find_parent(u);
+        int b = find_parent(v);
+
+        if(a== b)return;
+
+        if(rank[a]>=rank[b]){
+            parent[b] = a;
+            rank[a]+=1; 
+        } else {
+            parent[a] = b;
+            rank[b]+=1;
+        }
+    }
+
+    long long maxAlternatingSum(vector<int>& nums, vector<vector<int>>& swaps) {
+        //the swaps are inter-related so for each component we have to maximise the sum
+        // could be achieved using dsu
+        long long ans=0;
+        n = nums.size();
+        parent.resize(n);
+        rank.resize(n,1);
+        for(int i=0;i<n;i++)parent[i]=i;
+
+        //create a component for all the swaps
+        for(auto v:swaps){
+            union_set(v[0],v[1]);
+        }
+
+        unordered_map<int,vector<int>> parToChild;
+        for(int i=0;i<n;i++){
+            int node = i;
+            int par = find_parent(node);
+            parToChild[par].push_back(node);
+        }
+
+        //now traverse all the values
+        for(auto items:parToChild){
+            int par = items.first;
+            vector<int> child = items.second;
+            vector<int> val;
+            int oddctr=0;
+            for(auto ind:child){
+                if(ind%2)oddctr+=1;
+                val.push_back(nums[ind]);
+            }
+            sort(val.begin(),val.end());
+            int i=0;
+            for(int i=0;i<val.size();i++){
+                i<oddctr?ans-=val[i]:ans+=val[i];
+            }
+        }
+
+        return ans;
+
+    }
+};
