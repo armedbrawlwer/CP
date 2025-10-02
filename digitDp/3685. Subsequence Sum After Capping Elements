@@ -1,0 +1,29 @@
+#define all(x) x.begin(), x.end()
+class Solution {
+public:
+    vector<bool> subsequenceSumAfterCapping(vector<int>& nums, int k) {
+        int n = nums.size();
+        sort(all(nums));
+        vector<bool> dp(k+1,0);
+        vector<bool> ans;
+        dp[0]=1;
+
+        for(int cap=1,i=0;cap<=n;cap++){
+            while(i<n && nums[i]<cap){
+                for(int j=k;j>=nums[i];j--){
+                    if(dp[j-nums[i]]){
+                        dp[j]=true;
+                    }
+                }
+                i++;
+            }
+            int bigger=n-i;
+            bool pos = false;
+            for(int s=k;s>=max(0,k-bigger*cap);s-=cap){
+                pos = pos || dp[s];
+            }
+            ans.push_back(pos);
+        }
+        return ans;
+    }
+};
