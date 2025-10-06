@@ -1,0 +1,12 @@
+class Solution {
+public:
+    int longestSubsequence(vector<int>& nums) {
+        int n = nums.size();
+        //if xor of all the elements is 0.just remove one element
+        int zzz=0;
+        long long sum = accumulate(nums.begin(),nums.end(),0LL);
+        if(sum==0)return 0;
+        for(auto i:nums) zzz ^= i;
+        return zzz==0?n-1:n;
+    }
+};
